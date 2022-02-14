@@ -1,3 +1,6 @@
+# 连接端口号
+server:
+  port: 8083
 
 # 数据库连接
 spring:
@@ -6,9 +9,22 @@ spring:
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
-server:
-  port: 8083
 
+# redis配置
+shiro-redis:
+  enabled: true
+  redis-manager:
+    host: 127.0.0.1:6379
+
+# 扫描*Mapper.xml文件
 mybatis-plus:
   mapper-locations: classpath*:com/example/mapper/xml/*Mapper.xml
 
+# 配置Jwt
+microblog:
+  jwt:
+    # 加密密钥
+  secret: f4e2e52034348f86b67cde581c0f9eb5
+    # token 的有效时长：7天，单位是秒
+  expire: 604800
+  header: Authorization

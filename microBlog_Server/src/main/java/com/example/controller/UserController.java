@@ -1,8 +1,10 @@
 package com.example.controller;
 
+import com.example.common.Result;
 import com.example.entity.User;
 import com.example.service.UserService;
 import com.example.service.impl.UserServiceImpl;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,13 +25,11 @@ public class UserController {
 
     }
 
+    @RequiresAuthentication
     @RequestMapping("/test")
-    @ResponseBody
-    public String test() {
-        User user = new User();
-        user.setUsername("1");
-        user.setPassword("123456");
-        return "hello";
+    public Result test() {
+        User user = userService.getById(1L);
+        return Result.success(user);
     }
 
     @RequestMapping("/aa")
