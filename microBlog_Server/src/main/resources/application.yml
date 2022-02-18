@@ -18,7 +18,7 @@ shiro-redis:
 
 # 扫描*Mapper.xml文件
 mybatis-plus:
-  mapper-locations: classpath*:com/example/mapper/xml/*Mapper.xml
+  mapper-locations: classpath*:/mapper/**Mapper.xml
 
 # 配置Jwt
 microblog:

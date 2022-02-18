@@ -6,6 +6,7 @@ import com.example.service.UserService;
 import com.example.service.impl.UserServiceImpl;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -32,13 +33,10 @@ public class UserController {
         return Result.success(user);
     }
 
-    @RequestMapping("/aa")
-    @ResponseBody
-    public User aa() {
-        User user = new User();
-        user.setUsername("1");
-        user.setPassword("123456");
-        return user;
+    @RequestMapping("/save")
+    public Result save(@Validated @RequestBody User user) {
+
+        return Result.success(user);
     }
 
 

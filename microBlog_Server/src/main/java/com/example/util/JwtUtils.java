@@ -3,6 +3,7 @@ package com.example.util;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -35,6 +36,7 @@ public class JwtUtils {
                 .compact();
     }
 
+    // 解析token
     public Claims getClaimByToken(String token) {
         try {
             return Jwts.parser()
@@ -43,6 +45,7 @@ public class JwtUtils {
                     .getBody();
         }catch (Exception e){
 //            log.debug("validate is token error ", e);
+            System.out.println(e.getMessage());
             return null;
         }
     }
@@ -55,4 +58,27 @@ public class JwtUtils {
         return expiration.before(new Date());
     }
 
+    public String getSecret() {
+        return secret;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
+
+    public long getExpire() {
+        return expire;
+    }
+
+    public void setExpire(long expire) {
+        this.expire = expire;
+    }
+
+    public String getHeader() {
+        return header;
+    }
+
+    public void setHeader(String header) {
+        this.header = header;
+    }
 }

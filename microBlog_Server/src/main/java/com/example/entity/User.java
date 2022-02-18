@@ -4,13 +4,20 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
+
 @TableName("user")
-public class User {
+public class User implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
+
+    @NotBlank(message = "名字不能为空")
     private String username;
+
     private String password;
 
     public Long getId() {
