@@ -15,7 +15,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(value = ShiroException.class)
     public Result handler(ShiroException e) {
-        System.out.println("===========运行时异常=====================");
+        System.out.println("===========Shiro运行时异常=====================");
         return Result.fail(401, e.getMessage(), null);
     }
 

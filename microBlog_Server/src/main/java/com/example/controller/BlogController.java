@@ -57,4 +57,15 @@ public class BlogController {
 
     }
 
+    @RequiresAuthentication
+    @PostMapping("/blog/delete/{id}")
+    public Result delete(@PathVariable Long id) {
+        boolean exist = blogService.removeById(id);
+        if (exist == false) {
+            return Result.fail("微博删除失败");
+        } else {
+            return Result.success("微博删除成功");
+        }
+    }
+
 }

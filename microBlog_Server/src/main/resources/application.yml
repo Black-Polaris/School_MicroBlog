@@ -23,8 +23,8 @@ mybatis-plus:
 # 配置Jwt
 microblog:
   jwt:
-    # 加密密钥
-  secret: f4e2e52034348f86b67cde581c0f9eb5
-    # token 的有效时长：7天，单位是秒
-  expire: 604800
-  header: Authorization
+      # 加密密钥
+    secret: f4e2e52034348f86b67cde581c0f9eb5
+      # token 的有效时长：7天，单位是秒
+    expire: 604800
+    header: Authorization
