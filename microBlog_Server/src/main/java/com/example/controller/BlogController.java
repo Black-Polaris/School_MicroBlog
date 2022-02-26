@@ -46,7 +46,7 @@ public class BlogController {
         } else {
             tempBlog = new Blog();
             tempBlog.setUserId(ShiroUtil.getProfile().getId());
-            tempBlog.setCreate_date(new Date());
+            tempBlog.setCreateDate(new Date());
             tempBlog.setStatus(0);
         }
 

@@ -1,5 +1,7 @@
 package com.example.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -7,23 +9,25 @@ public class BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 7550766086746707203L;
 
-    private Date create_date;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date createDate;
 
-    private Date update_date;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date updateDate;
 
-    public Date getCreate_date() {
-        return create_date;
+    public Date getCreateDate() {
+        return createDate;
     }
 
-    public void setCreate_date(Date create_date) {
-        this.create_date = create_date;
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
 
-    public Date getUpdate_date() {
-        return update_date;
+    public Date getUpdateDate() {
+        return updateDate;
     }
 
-    public void setUpdate_date(Date update_date) {
-        this.update_date = update_date;
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
     }
 }
