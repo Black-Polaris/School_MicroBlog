@@ -12,9 +12,6 @@ public class BaseEntity implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date createDate;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date updateDate;
-
     public Date getCreateDate() {
         return createDate;
     }
@@ -23,11 +20,4 @@ public class BaseEntity implements Serializable {
         this.createDate = createDate;
     }
 
-    public Date getUpdateDate() {
-        return updateDate;
-    }
-
-    public void setUpdateDate(Date updateDate) {
-        this.updateDate = updateDate;
-    }
 }

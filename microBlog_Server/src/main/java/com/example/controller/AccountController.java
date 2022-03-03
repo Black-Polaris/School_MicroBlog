@@ -57,4 +57,22 @@ public class AccountController {
         SecurityUtils.getSubject().logout();
         return Result.success(null);
     }
+
+    @PostMapping("/testLogin")
+    public Result logint(@Validated @RequestBody LoginDto loginDto, HttpServletResponse response) {
+        User user = userService.findByUserName(loginDto.getUsername());
+        Assert.notNull(user, "用户不存在");
+
+        if (!user.getPassword().equals(loginDto.getPassword())) {
+            return Result.fail("密码不正确");
+        }
+        // TODO 为什么获取不到secret值
+        String jwt = jwtUtils.generateToken(user.getId());
+
+        response.setHeader("Authorization", jwt);
+        response.setHeader("Access-control-Expose-Headers", "Authorization");
+
+        return Result.success(user);
+    }
+
 }
