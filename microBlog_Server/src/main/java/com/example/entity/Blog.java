@@ -6,15 +6,15 @@ import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.io.Serializable;
 
-@TableName("blog")
+@TableName(value = "blog", resultMap = "BlogMapper")
 public class Blog extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "blog_id", type = IdType.AUTO)
     private Integer id;
 
-    private Integer userId;
+    private User userId;
 
     private String content;
 
@@ -28,11 +28,11 @@ public class Blog extends BaseEntity implements Serializable {
         this.id = id;
     }
 
-    public Integer getUserId() {
+    public User getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(User userId) {
         this.userId = userId;
     }
 

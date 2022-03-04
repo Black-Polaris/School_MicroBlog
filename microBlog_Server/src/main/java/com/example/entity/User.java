@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Date;
 
-@TableName("user")
+@TableName(value = "user", resultMap = "UserMapper" )
 public class User extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;

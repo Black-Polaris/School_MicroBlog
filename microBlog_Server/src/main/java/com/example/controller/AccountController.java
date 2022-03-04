@@ -43,11 +43,7 @@ public class AccountController {
         response.setHeader("Authorization", jwt);
         response.setHeader("Access-control-Expose-Headers", "Authorization");
 
-        return Result.success(MapUtil.builder()
-                .put("id", user.getId())
-                .put("username", user.getUsername())
-                .map()
-        );
+        return Result.success(user);
     }
 
     //需要认证权限才可以退出登录
@@ -60,7 +56,9 @@ public class AccountController {
 
     @PostMapping("/testLogin")
     public Result logint(@Validated @RequestBody LoginDto loginDto, HttpServletResponse response) {
-        User user = userService.findByUserName(loginDto.getUsername());
+        User user = userService.getOne(new QueryWrapper<User>().eq("username", loginDto.getUsername()));
+
+//        User user = userService.findByUserName(loginDto.getUsername());
         Assert.notNull(user, "用户不存在");
 
         if (!user.getPassword().equals(loginDto.getPassword())) {

@@ -42,7 +42,7 @@ public class MyRealm extends AuthorizingRealm {
         }
 
         AccountProfile profile = new AccountProfile();
-        BeanUtils.copyProperties(user, profile);
+        BeanUtils.copyProperties(user, profile); //将user的数据转移到profile中
 
         return new SimpleAuthenticationInfo(profile, jwtToken.getCredentials(), getName());
     }

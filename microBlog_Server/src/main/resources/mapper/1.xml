@@ -10,17 +10,8 @@
         <result property="description" column="description"></result>
         <result property="birthDate" column="birth_date"></result>
         <result property="createDate" column="create_date"></result>
-        <association property="avatar" javaType="com.example.entity.Avatar">
-            <id property="id" column="avatar_id"></id>
-            <result property="userId" column="user_id"></result>
-            <result property="avatarUrl" column="avatar_url"></result>
-            <result property="createDate" column="create_date"></result>
+        <association property="avatar" column="avatar_id"
+                     resultMap="com.example.mapper.AvatarMapper.AvatarMapper">
         </association>
     </resultMap>
-    <select id="findByUsername" parameterType="String" resultMap="UserMapper">
-        select user.*,avatar.avatar_url
-        from user, avatar
-        where user.avatar_id = avatar.avatar_id and user.username = #{username}
-    </select>
-
 </mapper>

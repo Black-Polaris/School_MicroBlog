@@ -9,12 +9,4 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
-
-    @Autowired
-    UserMapper userMapper;
-
-    @Override
-    public User findByUserName(String username) {
-        return userMapper.findByUsername(username);
-    }
 }

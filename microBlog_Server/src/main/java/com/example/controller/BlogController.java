@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.common.Result;
 import com.example.entity.Blog;
 import com.example.service.BlogService;
+import com.example.service.UserService;
 import com.example.util.ShiroUtil;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.BeanUtils;
@@ -21,6 +22,9 @@ public class BlogController {
 
     @Autowired
     BlogService blogService;
+
+    @Autowired
+    UserService userService;
 
     @GetMapping("/blogs")
     public Result list(@RequestParam(defaultValue = "1") Integer currentPage) {
@@ -42,10 +46,10 @@ public class BlogController {
         Blog tempBlog = null;
         if (blog.getId() != null) {
             tempBlog = blogService.getById(blog.getId());
-            Assert.isTrue(tempBlog.getUserId() == ShiroUtil.getProfile().getId(), "没有权限编辑");
+            Assert.isTrue(tempBlog.getUserId().getId() == ShiroUtil.getProfile().getId(), "没有权限编辑");
         } else {
             tempBlog = new Blog();
-            tempBlog.setUserId(ShiroUtil.getProfile().getId());
+            tempBlog.setUserId(userService.getById(ShiroUtil.getProfile().getId()));
             tempBlog.setCreateDate(new Date());
             tempBlog.setStatus(0);
         }
@@ -57,7 +61,6 @@ public class BlogController {
 
     }
 
-    @RequiresAuthentication
     @PostMapping("/blog/delete/{id}")
     public Result delete(@PathVariable Long id) {
         boolean exist = blogService.removeById(id);
