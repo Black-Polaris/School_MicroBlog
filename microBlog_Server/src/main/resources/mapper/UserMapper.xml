@@ -6,6 +6,7 @@
         <result property="username" column="username"></result>
         <result property="password" column="password"></result>
         <result property="nickname" column="nickname"></result>
+        <result property="avatarId" column="avatar_id"></result>
         <result property="gender" column="gender"></result>
         <result property="description" column="description"></result>
         <result property="birthDate" column="birth_date"></result>

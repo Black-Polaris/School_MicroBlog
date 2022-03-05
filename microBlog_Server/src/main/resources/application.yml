@@ -2,10 +2,13 @@
 server:
   port: 8083
 
+
 # 数据库连接
 spring:
+  jackson:
+    time-zone : GMT+8
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/microblog?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8
+    url: jdbc:mysql://127.0.0.1:3306/microblog?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
