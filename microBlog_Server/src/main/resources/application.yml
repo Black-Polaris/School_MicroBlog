@@ -19,6 +19,8 @@ shiro-redis:
 # 扫描*Mapper.xml文件
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**Mapper.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 # 配置Jwt
 microblog:

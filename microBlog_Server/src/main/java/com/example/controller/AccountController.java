@@ -64,7 +64,7 @@ public class AccountController {
         if (!user.getPassword().equals(loginDto.getPassword())) {
             return Result.fail("密码不正确");
         }
-        // TODO 为什么获取不到secret值
+
         String jwt = jwtUtils.generateToken(user.getId());
 
         response.setHeader("Authorization", jwt);

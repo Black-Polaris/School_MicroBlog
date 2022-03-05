@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.example.common.Result;
 import com.example.entity.Avatar;
 import com.example.entity.User;
 import com.example.service.AvatarService;
@@ -30,16 +31,22 @@ public class AvatarController {
     UserService userService;
 
     @PostMapping("/uploadAvatar")
-    public Avatar upload(@RequestParam MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public Result upload(@RequestParam MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws IOException {
         Avatar avatar = avatarService.upload(file);
         User user = userService.getById(avatar.getUserId());
-        user.setAvatar(avatar);
+        Avatar newAvatar = null;
         if (avatarService.save(avatar)) {
+            newAvatar = avatarService.getOne(new QueryWrapper<Avatar>().orderByDesc("create_date").last("LIMIT 1"));
+            user.setAvatarId(newAvatar.getId());
             userService.updateById(user);
         }
+        return Result.success(newAvatar);
+    }
 
-        Avatar newAvatar = avatarService.getOne(new QueryWrapper<Avatar>().orderByDesc("create_date").last("LIMIT 1"));
-        return newAvatar;
+    @PostMapping("/test")
+    public Avatar test() {
+        Avatar avatar = avatarService.getById(18);
+        return avatar;
     }
 
 }

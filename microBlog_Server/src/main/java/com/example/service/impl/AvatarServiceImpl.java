@@ -17,12 +17,17 @@ public class AvatarServiceImpl extends ServiceImpl<AvatarMapper, Avatar> impleme
 
     @Override
     public Avatar upload(MultipartFile multipartFile) throws IOException {
-        String filename = multipartFile.getOriginalFilename();
+        String filename = System.currentTimeMillis() + multipartFile.getOriginalFilename().substring(multipartFile.getOriginalFilename().lastIndexOf("."));
+
         String upload = "F:/Document/Desktop/MyAvatar/";
-        File fileDir = new File(upload);
+        File parentFile = new File(upload);
+        if (!parentFile.exists()) {
+            parentFile.mkdirs();
+        }
 
         String path = upload + filename;
         File filePath = new File(path);
+
         BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(filePath));
         outputStream.write(multipartFile.getBytes());
         outputStream.flush();
@@ -30,7 +35,7 @@ public class AvatarServiceImpl extends ServiceImpl<AvatarMapper, Avatar> impleme
 
         Avatar tempAvatar = new Avatar();
         tempAvatar.setUserId(ShiroUtil.getProfile().getId());
-        tempAvatar.setAvatarUrl(path);
+        tempAvatar.setAvatarUrl(filename);
         tempAvatar.setCreateDate(new Date());
 
         return tempAvatar;

@@ -1,6 +1,7 @@
 package com.example.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -24,6 +25,10 @@ public class User extends BaseEntity implements Serializable {
 
     private String nickname;
 
+    @TableField(value = "avatar_id")
+    private int avatarId;
+
+    @TableField(exist = false)
     private Avatar avatar;
 
     private String gender;
@@ -63,6 +68,14 @@ public class User extends BaseEntity implements Serializable {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public int getAvatarId() {
+        return avatarId;
+    }
+
+    public void setAvatarId(int avatarId) {
+        this.avatarId = avatarId;
     }
 
     public Avatar getAvatar() {
