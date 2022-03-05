@@ -6,12 +6,16 @@
         <result property="username" column="username"></result>
         <result property="password" column="password"></result>
         <result property="nickname" column="nickname"></result>
+        <result property="avatarId" column="avatar_id"></result>
         <result property="gender" column="gender"></result>
         <result property="description" column="description"></result>
         <result property="birthDate" column="birth_date"></result>
         <result property="createDate" column="create_date"></result>
         <association property="avatar" column="avatar_id"
-                     resultMap="com.example.mapper.AvatarMapper.AvatarMapper">
+                     select="findAvatarById">
         </association>
     </resultMap>
+    <select id="findAvatarById" parameterType="int" resultMap="com.example.mapper.AvatarMapper.AvatarMapper">
+        select *  from avatar where avatar_id = #{avatar_id}
+    </select>
 </mapper>

@@ -12,7 +12,10 @@
         <result property="birthDate" column="birth_date"></result>
         <result property="createDate" column="create_date"></result>
         <association property="avatar" column="avatar_id"
-                     resultMap="com.example.mapper.AvatarMapper.AvatarMapper">
+                     select="findAvatarById">
         </association>
     </resultMap>
+    <select id="findAvatarById" parameterType="int" resultMap="com.example.mapper.AvatarMapper.AvatarMapper">
+        select *  from avatar where avatar_id = #{avatar_id}
+    </select>
 </mapper>
