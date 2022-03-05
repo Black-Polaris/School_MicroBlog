@@ -35,6 +35,18 @@ public class UserController {
         return Result.fail("修改失败");
     }
 
+    @PostMapping("/changePass")
+    public Result changePass(@RequestBody User user) {
+        User user1 = userService.getById(ShiroUtil.getProfile().getId());
+        Assert.notNull(user1, "用户不存在");
+        user1.setPassword(user.getPassword());
+        if (userService.updateById(user1)) {
+            User afterUpdate = userService.getById(user1.getId());
+            return Result.success(afterUpdate);
+        }
+        return Result.fail("修改失败");
+    }
+
 
 
     @GetMapping("/{id}")
