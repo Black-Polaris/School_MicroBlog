@@ -12,8 +12,12 @@ spring:
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 0
 
-# redis配置
+# shiro-redis配置
 shiro-redis:
   enabled: true
   redis-manager:
@@ -22,6 +26,7 @@ shiro-redis:
 # 扫描*Mapper.xml文件
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**Mapper.xml
+#  配置控制台输出SQL语句
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 

@@ -4,12 +4,17 @@ import com.example.common.Result;
 import com.example.entity.User;
 import com.example.service.UserService;
 import com.example.service.impl.UserServiceImpl;
+import com.example.util.RedisUtil;
 import com.example.util.ShiroUtil;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -18,7 +23,10 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    RedisUtil redisUtil;
 
+    @RequiresAuthentication
     @PostMapping("/update")
     public Result update(@RequestBody User user) {
         User user1 = userService.getById(ShiroUtil.getProfile().getId());
@@ -35,6 +43,7 @@ public class UserController {
         return Result.fail("修改失败");
     }
 
+    @RequiresAuthentication
     @PostMapping("/changePass")
     public Result changePass(@RequestBody User user) {
         User user1 = userService.getById(ShiroUtil.getProfile().getId());
@@ -48,7 +57,7 @@ public class UserController {
     }
 
 
-
+//如下待删除
     @GetMapping("/{id}")
     public User obj(@PathVariable("id") int id){
         User u = new User();
@@ -70,6 +79,18 @@ public class UserController {
     public Result save(@Validated @RequestBody User user) {
 
         return Result.success(user);
+    }
+
+    @RequestMapping("/redisTest")
+    public Result redisTest() {
+        ObjectMapper mapper = new ObjectMapper();
+        User u = mapper.convertValue(redisUtil.get("user"), new TypeReference<User>(){});
+//        User u = (User) redisUtil.get("user");
+        if (null == u){
+            u = userService.getById(1);
+            redisUtil.set("user", u);
+        }
+        return Result.success(u);
     }
 
 
