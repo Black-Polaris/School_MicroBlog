@@ -1,6 +1,6 @@
 package com.example.service;
 
-import com.example.entity.Transpond;
+import com.example.entity.Relay;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author shenqinbin
  * @since 2022-03-04
  */
-public interface TranspondService extends IService<Transpond> {
+public interface RelayService extends IService<Relay> {
 
 }

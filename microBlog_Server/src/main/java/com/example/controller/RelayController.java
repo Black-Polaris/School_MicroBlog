@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2022-03-04
  */
 @RestController
-@RequestMapping("/transpond")
-public class TranspondController {
+@RequestMapping("/relay")
+public class RelayController {
 
 }

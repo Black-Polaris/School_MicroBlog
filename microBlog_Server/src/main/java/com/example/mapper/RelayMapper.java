@@ -1,6 +1,6 @@
 package com.example.mapper;
 
-import com.example.entity.Like;
+import com.example.entity.Relay;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author shenqinbin
  * @since 2022-03-04
  */
-public interface LikeMapper extends BaseMapper<Like> {
+public interface RelayMapper extends BaseMapper<Relay> {
 
 }

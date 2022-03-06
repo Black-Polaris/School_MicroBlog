@@ -13,23 +13,23 @@ import java.io.Serializable;
  * @author shenqinbin
  * @since 2022-03-04
  */
-public class Like extends BaseEntity implements Serializable {
+public class Love extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "like_id", type = IdType.AUTO)
-    private Integer likeId;
+    @TableId(value = "love_id", type = IdType.AUTO)
+    private Integer loveId;
 
     private Integer userId;
 
     private Integer blogId;
 
-    public Integer getLikeId() {
-        return likeId;
+    public Integer getLoveId() {
+        return loveId;
     }
 
-    public void setLikeId(Integer likeId) {
-        this.likeId = likeId;
+    public void setLoveId(Integer loveId) {
+        this.loveId = loveId;
     }
 
     public Integer getUserId() {

@@ -12,25 +12,25 @@ import java.io.Serializable;
  * @author shenqinbin
  * @since 2022-03-04
  */
-public class Transpond extends BaseEntity implements Serializable {
+public class Relay extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "transpond_id", type = IdType.AUTO)
-    private Integer transpondId;
+    @TableId(value = "relay_id", type = IdType.AUTO)
+    private Integer relayId;
 
     private Integer userId;
 
     private Integer blogId;
 
-    private String transpondComment;
+    private String relayComment;
 
-    public Integer getTranspondId() {
-        return transpondId;
+    public Integer getRelayId() {
+        return relayId;
     }
 
-    public void setTranspondId(Integer transpondId) {
-        this.transpondId = transpondId;
+    public void setRelayId(Integer relayId) {
+        this.relayId = relayId;
     }
 
     public Integer getUserId() {
@@ -49,11 +49,11 @@ public class Transpond extends BaseEntity implements Serializable {
         this.blogId = blogId;
     }
 
-    public String getTranspondComment() {
-        return transpondComment;
+    public String getRelayComment() {
+        return relayComment;
     }
 
-    public void setTranspondComment(String transpondComment) {
-        this.transpondComment = transpondComment;
+    public void setRelayComment(String relayComment) {
+        this.relayComment = relayComment;
     }
 }

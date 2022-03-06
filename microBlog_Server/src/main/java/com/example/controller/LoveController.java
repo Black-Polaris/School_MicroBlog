@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2022-03-04
  */
 @RestController
-@RequestMapping("/like")
-public class LikeController {
+@RequestMapping("/love")
+public class LoveController {
 
 }

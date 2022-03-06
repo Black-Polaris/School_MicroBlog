@@ -1,6 +1,6 @@
 package com.example.mapper;
 
-import com.example.entity.Transpond;
+import com.example.entity.Love;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author shenqinbin
  * @since 2022-03-04
  */
-public interface TranspondMapper extends BaseMapper<Transpond> {
+public interface LoveMapper extends BaseMapper<Love> {
 
 }

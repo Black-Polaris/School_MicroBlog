@@ -1,6 +1,6 @@
 package com.example.service;
 
-import com.example.entity.Like;
+import com.example.entity.Love;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author shenqinbin
  * @since 2022-03-04
  */
-public interface LikeService extends IService<Like> {
+public interface LoveService extends IService<Love> {
 
 }
