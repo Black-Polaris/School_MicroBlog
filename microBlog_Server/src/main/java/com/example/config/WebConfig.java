@@ -13,6 +13,7 @@ public class WebConfig implements WebMvcConfigurer {
          *  addResourceHandler: 访问映射路径
          *  addResourceLocations： 资源绝对路径
          */
-        registry.addResourceHandler("/image/**").addResourceLocations("file:/F:/Document/Desktop/MyAvatar/");
+        registry.addResourceHandler("/avatar/**").addResourceLocations("file:/F:/Document/Desktop/MicroBlog/MyAvatar/");
+        registry.addResourceHandler("/picture/**").addResourceLocations("file:/F:/Document/Desktop/MicroBlog/BlogPicture/");
     }
 }

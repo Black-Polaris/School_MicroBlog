@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 
 @RestController
+@RequestMapping("/blog")
 public class BlogController {
 
     @Autowired
@@ -30,6 +31,13 @@ public class BlogController {
     public Result list(@RequestParam(defaultValue = "1") Integer currentPage) {
         Page page = new Page(currentPage, 5);
         IPage pageData = blogService.page( page, new QueryWrapper<Blog>().orderByDesc("create_date"));
+        return Result.success(pageData);
+    }
+
+    @GetMapping("/myBlogs")
+    public Result myBlogs(@RequestParam(defaultValue = "1") Integer currentPage) {
+        Page page = new Page(currentPage, 5);
+        IPage pageData = blogService.page(page, new QueryWrapper<Blog>().eq("user_id", ShiroUtil.getProfile().getId()).orderByDesc("create_date"));
         return Result.success(pageData);
     }
 
@@ -46,10 +54,10 @@ public class BlogController {
         Blog tempBlog = null;
         if (blog.getId() != null) {
             tempBlog = blogService.getById(blog.getId());
-            Assert.isTrue(tempBlog.getUserId().getId() == ShiroUtil.getProfile().getId(), "没有权限编辑");
+            Assert.isTrue(tempBlog.getUserId() == ShiroUtil.getProfile().getId(), "没有权限编辑");
         } else {
             tempBlog = new Blog();
-            tempBlog.setUserId(userService.getById(ShiroUtil.getProfile().getId()));
+            tempBlog.setUserId(ShiroUtil.getProfile().getId());
             tempBlog.setCreateDate(new Date());
             tempBlog.setStatus(0);
         }
