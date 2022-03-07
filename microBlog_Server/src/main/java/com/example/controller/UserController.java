@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.common.Result;
 import com.example.entity.User;
 import com.example.service.UserService;
@@ -10,6 +11,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +27,9 @@ public class UserController {
 
     @Autowired
     RedisUtil redisUtil;
+
+    @Autowired
+    RedisTemplate redisTemplate;
 
     @RequiresAuthentication
     @PostMapping("/update")
@@ -83,9 +88,7 @@ public class UserController {
 
     @RequestMapping("/redisTest")
     public Result redisTest() {
-        ObjectMapper mapper = new ObjectMapper();
-        User u = mapper.convertValue(redisUtil.get("user"), new TypeReference<User>(){});
-//        User u = (User) redisUtil.get("user");
+        User u = (User) redisUtil.get("user");
         if (null == u){
             u = userService.getById(1);
             redisUtil.set("user", u);

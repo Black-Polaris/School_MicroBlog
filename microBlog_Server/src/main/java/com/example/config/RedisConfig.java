@@ -1,9 +1,11 @@
 package com.example.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
@@ -19,7 +21,7 @@ public class RedisConfig {
         template.setConnectionFactory(factory);
         // 设置序列化工具
         // 创建一个json的序列化对象
-        Jackson2JsonRedisSerializer jackson = new Jackson2JsonRedisSerializer(Object.class);
+        GenericJackson2JsonRedisSerializer jackson = new GenericJackson2JsonRedisSerializer(String.valueOf(Object.class));
         // 设置key序列化方式string
         template.setKeySerializer(new StringRedisSerializer());
         // 设置value的序列化方式为json
