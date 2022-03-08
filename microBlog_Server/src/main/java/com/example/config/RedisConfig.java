@@ -16,7 +16,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class RedisConfig {
 
     @Bean
-    public RedisTemplate<String, Object> template(RedisConnectionFactory factory) {
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(factory);
         // 设置序列化工具
@@ -30,6 +30,7 @@ public class RedisConfig {
         template.setHashKeySerializer(new StringRedisSerializer());
         // 设置hash value的序列化方式json
         template.setHashValueSerializer(jackson);
+        template.setEnableDefaultSerializer(true);
         template.afterPropertiesSet();
         return template;
     }

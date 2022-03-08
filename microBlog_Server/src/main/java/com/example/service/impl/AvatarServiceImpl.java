@@ -19,7 +19,7 @@ public class AvatarServiceImpl extends ServiceImpl<AvatarMapper, Avatar> impleme
     public Avatar upload(MultipartFile multipartFile) throws IOException {
         String filename = System.currentTimeMillis() + multipartFile.getOriginalFilename().substring(multipartFile.getOriginalFilename().lastIndexOf("."));
 
-        String upload = "F:/Document/Desktop/MyAvatar/";
+        String upload = "F:/Document/Desktop/MicroBlog/MyAvatar/";
         File parentFile = new File(upload);
         if (!parentFile.exists()) {
             parentFile.mkdirs();
