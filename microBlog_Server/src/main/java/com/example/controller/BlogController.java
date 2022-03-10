@@ -14,6 +14,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +36,7 @@ public class BlogController {
     @Autowired
     RedisTemplate redisTemplate;
 
+    // 查找最新微博
     @GetMapping("/blogs")
     public Result list(@RequestParam(defaultValue = "1") Integer currentPage) {
         List<Blog> blogList = new ArrayList<>();
@@ -54,12 +56,13 @@ public class BlogController {
         return Result.success(blogList);
     }
 
+    // 查找微博小时榜
     @GetMapping("/getHour")
     public Result getHour(@RequestParam Integer currentPage) {
         List<Blog> blogList = new ArrayList<>();
         long hour = System.currentTimeMillis()/(1000*60*60);
         Set blogSet = this.redisTemplate.opsForZSet().reverseRange(CacheConstant.HOUR_KEY + hour, 5*(currentPage-1), 5*currentPage-1);
-        if (blogSet.size() == 0) {
+        if (CollectionUtils.isEmpty(blogSet)) {
             List<Blog> blogs = blogService.list(new QueryWrapper<Blog>().orderByDesc("create_date").last("Limit "+ 5*(currentPage-1)+","+5*currentPage));
             blogs.forEach(blog -> {
                 blog = blogService.addBlog2Cache(blog, hour);
@@ -73,6 +76,49 @@ public class BlogController {
         }
         return Result.success(blogList);
     }
+
+    // 查找微博日榜
+    @GetMapping("/getDay")
+    public Result getDay(@RequestParam Integer currentPage) {
+        List<Blog> blogList = new ArrayList<>();
+        Set blogSet = this.redisTemplate.opsForZSet().reverseRange(CacheConstant.DAY_KEY,5*(currentPage-1), 5*currentPage-1);
+        if (!CollectionUtils.isEmpty(blogSet)) {
+            blogSet.forEach(blogId -> {
+                Blog blog = blogService.getBlogFromCache(blogId);
+                blogList.add(blog);
+            });
+        }
+        return Result.success(blogList);
+    }
+
+    // 查找微博周榜
+    @GetMapping("/getWeek")
+    public Result getWeek(@RequestParam Integer currentPage) {
+        List<Blog> blogList = new ArrayList<>();
+        Set blogSet = this.redisTemplate.opsForZSet().reverseRange(CacheConstant.WEEK_KEY,5*(currentPage-1), 5*currentPage-1);
+        if (!CollectionUtils.isEmpty(blogSet)) {
+            blogSet.forEach(blogId -> {
+                Blog blog = blogService.getBlogFromCache(blogId);
+                blogList.add(blog);
+            });
+        }
+        return Result.success(blogList);
+    }
+
+    // 查找微博月榜
+    @GetMapping("/getMonth")
+    public Result getMonth(@RequestParam Integer currentPage) {
+        List<Blog> blogList = new ArrayList<>();
+        Set blogSet = this.redisTemplate.opsForZSet().reverseRange(CacheConstant.MONTH_KEY,5*(currentPage-1), 5*currentPage-1);
+        if (!CollectionUtils.isEmpty(blogSet)) {
+            blogSet.forEach(blogId -> {
+                Blog blog = blogService.getBlogFromCache(blogId);
+                blogList.add(blog);
+            });
+        }
+        return Result.success(blogList);
+    }
+
 
     @GetMapping("/myBlogs")
     public Result myBlogs(@RequestParam(defaultValue = "1") Integer currentPage) {
