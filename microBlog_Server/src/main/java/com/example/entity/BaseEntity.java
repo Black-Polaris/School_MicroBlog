@@ -2,14 +2,12 @@ package com.example.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.io.Serializable;
 import java.util.Date;
 
-public class BaseEntity implements Serializable {
+public class BaseEntity  {
 
-    private static final long serialVersionUID = 7550766086746707203L;
-
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createDate;
 
     public Date getCreateDate() {

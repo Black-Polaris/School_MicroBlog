@@ -8,26 +8,11 @@
         <result property="createDate" column="create_date"></result>
         <result property="userId" column="user_id"></result>
         <association property="user" column="user_id" select="findUserByUserId"></association>
-        <association property="relay" column="blog_id" select="findRelayByBlogId"></association>
-        <association property="comment" column="blog_id" select="findCommentByBlogId"></association>
-        <association property="love" column="blog_id" select="findLoveByBlogId"></association>
         <collection property="pictures" column="blog_id" select="findPicturesByBlogId"></collection>
     </resultMap>
 
     <select id="findUserByUserId" parameterType="int" resultMap="com.example.mapper.UserMapper.UserMapper">
         select * from user where user_id = #{user_id}
-    </select>
-
-    <select id="findRelayByBlogId" parameterType="int" resultType="int">
-        SELECT COUNT(*) FROM relay WHERE blog_id = #{blog_id}
-    </select>
-
-    <select id="findCommentByBlogId" parameterType="int" resultType="int">
-        SELECT COUNT(*) FROM comment WHERE blog_id = #{blog_id}
-    </select>
-
-    <select id="findLoveByBlogId" parameterType="int" resultType="int">
-        SELECT COUNT(*) FROM love WHERE blog_id = #{blog_id}
     </select>
 
     <select id="findPicturesByBlogId" parameterType="int" resultType="string">

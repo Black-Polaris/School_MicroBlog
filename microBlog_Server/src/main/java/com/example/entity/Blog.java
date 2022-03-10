@@ -5,13 +5,10 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
-import java.io.Serializable;
-import java.util.List;
+import java.util.Map;
 
 @TableName(value = "blog", resultMap = "BlogMapper")
-public class Blog extends BaseEntity implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class Blog extends BaseEntity  {
 
     @TableId(value = "blog_id", type = IdType.AUTO)
     private Integer id;
@@ -29,13 +26,13 @@ public class Blog extends BaseEntity implements Serializable {
     private String[] pictures;
 
     @TableField(exist = false)
-    private int relay;
+    private Map relay;
 
     @TableField(exist = false)
-    private int comment;
+    private Long comment;
 
     @TableField(exist = false)
-    private int love;
+    private Map love;
 
     public Integer getId() {
         return id;
@@ -85,27 +82,27 @@ public class Blog extends BaseEntity implements Serializable {
         this.pictures = pictures;
     }
 
-    public int getRelay() {
+    public Map getRelay() {
         return relay;
     }
 
-    public void setRelay(int relay) {
+    public void setRelay(Map relay) {
         this.relay = relay;
     }
 
-    public int getComment() {
+    public Long getComment() {
         return comment;
     }
 
-    public void setComment(int comment) {
+    public void setComment(Long comment) {
         this.comment = comment;
     }
 
-    public int getLove() {
+    public Map getLove() {
         return love;
     }
 
-    public void setLove(int love) {
+    public void setLove(Map love) {
         this.love = love;
     }
 }

@@ -7,13 +7,11 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.validation.constraints.NotBlank;
-import java.io.Serializable;
 import java.util.Date;
 
-@TableName(value = "user", resultMap = "UserMapper" )
-public class User extends BaseEntity implements Serializable {
+@TableName(value = "user", resultMap = "UserMapper")
+public class User extends BaseEntity {
 
-    private static final long serialVersionUID = 1L;
 
     @TableId(value = "user_id", type = IdType.AUTO)
     private Integer id;

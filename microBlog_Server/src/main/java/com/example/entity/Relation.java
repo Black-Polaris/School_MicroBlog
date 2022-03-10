@@ -3,8 +3,6 @@ package com.example.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 
-import java.io.Serializable;
-
 /**
  * <p>
  *
@@ -13,9 +11,7 @@ import java.io.Serializable;
  * @author shenqinbin
  * @since 2022-03-04
  */
-public class Relation implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class Relation  {
 
     @TableId(value = "relation_id", type = IdType.AUTO)
     private Integer relationId;

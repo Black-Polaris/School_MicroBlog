@@ -2,7 +2,7 @@ package com.example.shiro;
 
 import java.io.Serializable;
 
-public class AccountProfile implements Serializable {
+public class AccountProfile  {
     private Integer id;
     private String username;
     private String password;

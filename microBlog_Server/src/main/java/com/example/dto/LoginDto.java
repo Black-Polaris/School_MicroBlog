@@ -1,9 +1,8 @@
 package com.example.dto;
 
 import javax.validation.constraints.NotBlank;
-import java.io.Serializable;
 
-public class LoginDto implements Serializable {
+public class LoginDto  {
     @NotBlank(message = "昵称不能为空")
     private String username;
 

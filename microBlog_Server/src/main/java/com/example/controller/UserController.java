@@ -31,6 +31,9 @@ public class UserController {
     @Autowired
     RedisTemplate redisTemplate;
 
+    @Autowired
+    ObjectMapper mapper;
+
     @RequiresAuthentication
     @PostMapping("/update")
     public Result update(@RequestBody User user) {
@@ -88,12 +91,17 @@ public class UserController {
 
     @RequestMapping("/redisTest")
     public Result redisTest() {
-        User u = (User) redisUtil.get("user");
-        if (null == u){
-            u = userService.getById(1);
-            redisUtil.set("user", u);
+
+        List<User> users = mapper.convertValue(redisTemplate.opsForZSet().range("users:user", 0, -1), new TypeReference<List<User>>() {});
+//        List<User> user = (List<User>) redisTemplate.opsForZSet().range("user",0,-1);
+
+        if (users.size() == 0){
+            users = userService.list(new QueryWrapper<User>().orderByAsc("create_date"));
+            users.forEach(u -> {
+                redisTemplate.opsForZSet().add("users:user", u, u.getId()+u.getAvatarId());
+            });
         }
-        return Result.success(u);
+        return Result.success(users);
     }
 
 
