@@ -7,4 +7,7 @@ public interface BlogService extends IService<Blog> {
     Blog addBlog2Cache(Blog blog, long hour);
 
     Blog getBlogFromCache(Object blogId);
+
+    Blog addBlog2BlogCache(Blog blog);
+
 }

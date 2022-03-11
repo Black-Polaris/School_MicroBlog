@@ -58,4 +58,23 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements Bl
         blog.setLove(loveMap);
         return blog;
     }
+
+    @Override
+    public Blog addBlog2BlogCache(Blog blog) {
+        Avatar avatar = blog.getUser().getAvatar();
+        redisTemplate.opsForValue().set(CacheConstant.AVATAR_KEY + avatar.getId(), avatar);
+        User user = blog.getUser();
+        redisTemplate.opsForValue().set(CacheConstant.USER_KEY + user.getId(), user);
+        redisTemplate.opsForValue().set(CacheConstant.BLOG_KEY + blog.getId(), blog);
+        Map relayMap = new HashMap();
+        relayMap.put("relaySize", this.redisTemplate.opsForSet().size(CacheConstant.RELAY_KEY + blog.getId()) == 0 ? 0 : this.redisTemplate.opsForSet().size(CacheConstant.RELAY_KEY + blog.getId()));
+        relayMap.put("isRelay", this.redisTemplate.opsForSet().isMember(CacheConstant.RELAY_KEY + blog.getId(), ShiroUtil.getProfile() == null ? 0 : ShiroUtil.getProfile().getId()));
+        blog.setRelay(relayMap);
+        blog.setComment(this.redisTemplate.opsForValue().size(CacheConstant.COMMENT_KEY + blog.getId()) == 0 ? 0 : this.redisTemplate.opsForValue().size(CacheConstant.COMMENT_KEY + blog.getId()));
+        Map loveMap = new HashMap();
+        loveMap.put("loveSize", this.redisTemplate.opsForSet().size(CacheConstant.LOVE_KEY + blog.getId()) == 0 ? 0 : this.redisTemplate.opsForSet().size(CacheConstant.LOVE_KEY + blog.getId()));
+        loveMap.put("isLove", this.redisTemplate.opsForSet().isMember(CacheConstant.LOVE_KEY + blog.getId(), ShiroUtil.getProfile() == null ? 0 : ShiroUtil.getProfile().getId()));
+        blog.setLove(loveMap);
+        return blog;
+    }
 }

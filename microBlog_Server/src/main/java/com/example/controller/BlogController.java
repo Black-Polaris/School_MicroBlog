@@ -47,7 +47,7 @@ public class BlogController {
         blogs.forEach(blog -> {
             String blogKey = CacheConstant.BLOG_KEY + blog.getId();
             if (!this.redisTemplate.hasKey(blogKey)) {
-                blog = blogService.addBlog2Cache(blog, hour);
+                blog = blogService.addBlog2BlogCache(blog);
                 blogList.add(blog);
             }
             Blog cacheBlog = blogService.getBlogFromCache(blog.getId());
@@ -120,12 +120,23 @@ public class BlogController {
     }
 
 
+    @RequiresAuthentication
     @GetMapping("/myBlogs")
     public Result myBlogs(@RequestParam(defaultValue = "1") Integer currentPage) {
+        List<Blog> blogList = new ArrayList<>();
         Page page = new Page(currentPage, 5);
-        IPage pageData = blogService.page(page, new QueryWrapper<Blog>().eq("user_id", ShiroUtil.getProfile().getId()).orderByDesc("create_date"));
-
-        return Result.success(pageData);
+        IPage<Blog> pageData = blogService.page(page, new QueryWrapper<Blog>().eq("user_id", ShiroUtil.getProfile().getId()).orderByDesc("create_date"));
+        List<Blog> blogs = pageData.getRecords();
+        blogs.forEach(blog -> {
+            String blogKey = CacheConstant.BLOG_KEY + blog.getId();
+            if (!this.redisTemplate.hasKey(blogKey)) {
+                blog = blogService.addBlog2BlogCache(blog);
+                blogList.add(blog);
+            }
+            Blog cacheBlog = blogService.getBlogFromCache(blog.getId());
+            blogList.add(cacheBlog);
+        });
+        return Result.success(blogList);
     }
 
     @GetMapping("/blog/{id}")

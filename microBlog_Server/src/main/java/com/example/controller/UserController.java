@@ -2,9 +2,10 @@ package com.example.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.common.Result;
+import com.example.entity.Blog;
 import com.example.entity.User;
+import com.example.service.BlogService;
 import com.example.service.UserService;
-import com.example.service.impl.UserServiceImpl;
 import com.example.util.RedisUtil;
 import com.example.util.ShiroUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -24,6 +25,9 @@ public class UserController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    BlogService blogService;
 
     @Autowired
     RedisUtil redisUtil;
@@ -46,6 +50,11 @@ public class UserController {
         user1.setBirthDate(user.getBirthDate());
         if (userService.updateById(user1)) {
             User afterUpdate = userService.getById(user1.getId());
+            List<Blog> blogList = blogService.list(new QueryWrapper<Blog>().eq("user_id", afterUpdate.getId()));
+            blogList.forEach(blog -> {
+                blog.setUser(afterUpdate);
+                blogService.addBlog2BlogCache(blog);
+            });
             return Result.success(afterUpdate);
         }
         return Result.fail("修改失败");
@@ -59,13 +68,18 @@ public class UserController {
         user1.setPassword(user.getPassword());
         if (userService.updateById(user1)) {
             User afterUpdate = userService.getById(user1.getId());
+            List<Blog> blogList = blogService.list(new QueryWrapper<Blog>().eq("user_id", afterUpdate.getId()));
+            blogList.forEach(blog -> {
+                blog.setUser(afterUpdate);
+                blogService.addBlog2BlogCache(blog);
+            });
             return Result.success(afterUpdate);
         }
         return Result.fail("修改失败");
     }
 
 
-//如下待删除
+//  TODO 如下待删除
     @GetMapping("/{id}")
     public User obj(@PathVariable("id") int id){
         User u = new User();
