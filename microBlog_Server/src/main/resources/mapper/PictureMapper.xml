@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.mapper.PictureMapper">
-
+    <resultMap id="PictureMapper" type="com.example.entity.Picture">
+        <id property="id" column="picture_id"></id>
+        <result property="blogId" column="blog_id"></result>
+        <result property="pictureUrl" column="picture_url"></result>
+        <result property="createDate" column="create_date"></result>
+    </resultMap>
 </mapper>

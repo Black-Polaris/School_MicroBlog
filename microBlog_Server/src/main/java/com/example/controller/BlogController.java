@@ -6,18 +6,22 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.common.Result;
 import com.example.entity.Blog;
 import com.example.entity.CacheConstant;
+import com.example.entity.Picture;
 import com.example.service.BlogService;
+import com.example.service.PictureService;
 import com.example.service.UserService;
 import com.example.util.ShiroUtil;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -34,6 +38,9 @@ public class BlogController {
     UserService userService;
 
     @Autowired
+    PictureService pictureService;
+
+    @Autowired
     RedisTemplate redisTemplate;
 
     // 查找最新微博
@@ -43,7 +50,6 @@ public class BlogController {
         Page page = new Page(currentPage, 5);
         IPage<Blog> pageData = blogService.page( page, new QueryWrapper<Blog>().orderByDesc("create_date"));
         List<Blog> blogs = pageData.getRecords();
-        long hour = System.currentTimeMillis()/(1000*60*60);
         blogs.forEach(blog -> {
             String blogKey = CacheConstant.BLOG_KEY + blog.getId();
             if (!this.redisTemplate.hasKey(blogKey)) {
@@ -139,7 +145,7 @@ public class BlogController {
         return Result.success(blogList);
     }
 
-    @GetMapping("/blog/{id}")
+    @GetMapping("/{id}")
     public Result detail(@PathVariable Long id) {
         Blog blog = blogService.getById(id);
         Assert.notNull(blog, "该博客已经被删除");
@@ -147,27 +153,30 @@ public class BlogController {
     }
 
     @RequiresAuthentication
-    @PostMapping("/blog/edit")
-    public Result edit(@Validated @RequestBody Blog blog) {
-        Blog tempBlog = null;
-        if (blog.getId() != null) {
-            tempBlog = blogService.getById(blog.getId());
-            Assert.isTrue(tempBlog.getUserId() == ShiroUtil.getProfile().getId(), "没有权限编辑");
-        } else {
-            tempBlog = new Blog();
-            tempBlog.setUserId(ShiroUtil.getProfile().getId());
-            tempBlog.setCreateDate(new Date());
-            tempBlog.setStatus(0);
+    @PostMapping("/addBlog")
+    public Result addBlog(@RequestParam String textarea, MultipartFile[] files, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Blog blog = new Blog();
+        blog.setUserId(ShiroUtil.getProfile().getId());
+        blog.setContent(textarea);
+        blog.setStatus(1);
+        blog.setCreateDate(new Date());
+        Blog newBlog = new Blog();
+        if (blogService.save(blog)) {
+            newBlog = blogService.getOne(new QueryWrapper<Blog>().eq("user_id", ShiroUtil.getProfile().getId()).orderByDesc("create_date").last("limit 1"));
+        }
+        if (files!=null) {
+            for (MultipartFile file : files){
+                Picture picture = pictureService.upload(file, newBlog.getId());
+                pictureService.save(picture);
+            }
         }
 
-        BeanUtils.copyProperties(blog, tempBlog, "id", "userId", "create_date", "status");
-        blogService.saveOrUpdate(tempBlog);
 
-        return Result.success(null);
+        return Result.success("success");
 
     }
 
-    @PostMapping("/blog/delete/{id}")
+    @PostMapping("/delete/{id}")
     public Result delete(@PathVariable Long id) {
         boolean exist = blogService.removeById(id);
         if (exist == false) {

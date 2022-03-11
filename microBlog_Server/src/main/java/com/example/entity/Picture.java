@@ -14,16 +14,18 @@ import com.baomidou.mybatisplus.annotation.TableId;
 public class Picture extends BaseEntity  {
 
     @TableId(value = "picture_id", type = IdType.AUTO)
-    private Integer pictureId;
+    private Integer id;
 
     private Integer blogId;
 
-    public Integer getPictureId() {
-        return pictureId;
+    private String pictureUrl;
+
+    public Integer getId() {
+        return id;
     }
 
-    public void setPictureId(Integer pictureId) {
-        this.pictureId = pictureId;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Integer getBlogId() {
@@ -32,5 +34,13 @@ public class Picture extends BaseEntity  {
 
     public void setBlogId(Integer blogId) {
         this.blogId = blogId;
+    }
+
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
     }
 }
