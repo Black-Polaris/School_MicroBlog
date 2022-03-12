@@ -23,6 +23,9 @@ public class Blog extends BaseEntity  {
     private int status;
 
     @TableField(exist = false)
+    private Blog fromBlog;
+
+    @TableField(exist = false)
     private String[] pictures;
 
     @TableField(exist = false)
@@ -104,5 +107,13 @@ public class Blog extends BaseEntity  {
 
     public void setLove(Map love) {
         this.love = love;
+    }
+
+    public Blog getFromBlog() {
+        return fromBlog;
+    }
+
+    public void setFromBlog(Blog fromBlog) {
+        this.fromBlog = fromBlog;
     }
 }

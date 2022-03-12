@@ -137,10 +137,19 @@ public class BlogController {
             String blogKey = CacheConstant.BLOG_KEY + blog.getId();
             if (!this.redisTemplate.hasKey(blogKey)) {
                 blog = blogService.addBlog2BlogCache(blog);
+                if (blog.getStatus() == 2) {
+                    Blog fromBlog = (Blog) this.redisTemplate.opsForValue().get(CacheConstant.BLOG_KEY + blog.getContent());
+                    blog.setFromBlog(fromBlog);
+                }
                 blogList.add(blog);
+            } else {
+                Blog cacheBlog = blogService.getBlogFromCache(blog.getId());
+                if (blog.getStatus() == 2) {
+                    Blog fromBlog = (Blog) this.redisTemplate.opsForValue().get(CacheConstant.BLOG_KEY + cacheBlog.getContent());
+                    cacheBlog.setFromBlog(fromBlog);
+                }
+                blogList.add(cacheBlog);
             }
-            Blog cacheBlog = blogService.getBlogFromCache(blog.getId());
-            blogList.add(cacheBlog);
         });
         return Result.success(blogList);
     }
