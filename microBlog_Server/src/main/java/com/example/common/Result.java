@@ -14,7 +14,6 @@ public class Result  {
         result.setCode(code);
         result.setMsg(msg);
         result.setData(data);
-        result.setData(data);
         return result;
     }
 

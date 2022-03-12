@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+import java.util.List;
 import java.util.Map;
 
 @TableName(value = "blog", resultMap = "BlogMapper")
@@ -33,6 +34,9 @@ public class Blog extends BaseEntity  {
 
     @TableField(exist = false)
     private Long comment;
+
+    @TableField(exist = false)
+    private List<Comment> commentList;
 
     @TableField(exist = false)
     private Map love;
@@ -115,5 +119,13 @@ public class Blog extends BaseEntity  {
 
     public void setFromBlog(Blog fromBlog) {
         this.fromBlog = fromBlog;
+    }
+
+    public List<Comment> getCommentList() {
+        return commentList;
+    }
+
+    public void setCommentList(List<Comment> commentList) {
+        this.commentList = commentList;
     }
 }

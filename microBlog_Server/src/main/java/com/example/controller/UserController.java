@@ -2,11 +2,12 @@ package com.example.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.common.Result;
+import com.example.entity.Avatar;
 import com.example.entity.Blog;
 import com.example.entity.User;
+import com.example.service.AvatarService;
 import com.example.service.BlogService;
 import com.example.service.UserService;
-import com.example.util.RedisUtil;
 import com.example.util.ShiroUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,7 +31,7 @@ public class UserController {
     BlogService blogService;
 
     @Autowired
-    RedisUtil redisUtil;
+    AvatarService avatarService;
 
     @Autowired
     RedisTemplate redisTemplate;
@@ -76,6 +77,16 @@ public class UserController {
             return Result.success(afterUpdate);
         }
         return Result.fail("修改失败");
+    }
+
+    @PostMapping("/findUsers")
+    public Result findUsers(@RequestParam String keyWords) {
+        List<User> users = userService.list(new QueryWrapper<User>().like("nickname", keyWords));
+        users.forEach(user -> {
+            Avatar avatar = avatarService.getOne(new QueryWrapper<Avatar>().eq("user_id", user.getId()).orderByDesc("create_date").last("LIMIT 1"));
+            user.setAvatar(avatar);
+        });
+        return Result.success(users);
     }
 
 

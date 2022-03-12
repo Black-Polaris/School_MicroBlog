@@ -53,7 +53,7 @@ public class RelayController {
             blog.setStatus(2);
             blog.setCreateDate(new Date());
             blogService.save(blog);
-            this.redisTemplate.opsForSet().add(CacheConstant.LOVE_KEY + blogId, ShiroUtil.getProfile().getId());
+            this.redisTemplate.opsForSet().add(CacheConstant.RELAY_KEY + blogId, ShiroUtil.getProfile().getId());
 //           // 对相应的热搜微博的热度进行增加
             long hour = System.currentTimeMillis()/(1000*60*60);
             this.redisTemplate.opsForZSet().incrementScore(CacheConstant.HOUR_KEY + hour, blogId, 1);

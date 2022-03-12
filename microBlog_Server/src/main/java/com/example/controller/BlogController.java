@@ -54,9 +54,17 @@ public class BlogController {
             String blogKey = CacheConstant.BLOG_KEY + blog.getId();
             if (!this.redisTemplate.hasKey(blogKey)) {
                 blog = blogService.addBlog2BlogCache(blog);
+                if (blog.getStatus() == 2) {
+                    Blog fromBlog = (Blog) this.redisTemplate.opsForValue().get(CacheConstant.BLOG_KEY + blog.getContent());
+                    blog.setFromBlog(fromBlog);
+                }
                 blogList.add(blog);
             }
             Blog cacheBlog = blogService.getBlogFromCache(blog.getId());
+            if (cacheBlog.getStatus() == 2) {
+                Blog fromBlog = (Blog) this.redisTemplate.opsForValue().get(CacheConstant.BLOG_KEY + blog.getContent());
+                cacheBlog.setFromBlog(fromBlog);
+            }
             blogList.add(cacheBlog);
         });
         return Result.success(blogList);
@@ -72,11 +80,19 @@ public class BlogController {
             List<Blog> blogs = blogService.list(new QueryWrapper<Blog>().orderByDesc("create_date").last("Limit "+ 5*(currentPage-1)+","+5*currentPage));
             blogs.forEach(blog -> {
                 blog = blogService.addBlog2Cache(blog, hour);
+                if (blog.getStatus() == 2) {
+                    Blog fromBlog = (Blog) this.redisTemplate.opsForValue().get(CacheConstant.BLOG_KEY + blog.getContent());
+                    blog.setFromBlog(fromBlog);
+                }
                 blogList.add(blog);
             });
         } else {
             blogSet.forEach(blogId -> {
                 Blog blog = blogService.getBlogFromCache(blogId);
+                if (blog.getStatus() == 2) {
+                    Blog fromBlog = (Blog) this.redisTemplate.opsForValue().get(CacheConstant.BLOG_KEY + blog.getContent());
+                    blog.setFromBlog(fromBlog);
+                }
                 blogList.add(blog);
             });
         }
@@ -91,6 +107,10 @@ public class BlogController {
         if (!CollectionUtils.isEmpty(blogSet)) {
             blogSet.forEach(blogId -> {
                 Blog blog = blogService.getBlogFromCache(blogId);
+                if (blog.getStatus() == 2) {
+                    Blog fromBlog = (Blog) this.redisTemplate.opsForValue().get(CacheConstant.BLOG_KEY + blog.getContent());
+                    blog.setFromBlog(fromBlog);
+                }
                 blogList.add(blog);
             });
         }
@@ -105,6 +125,10 @@ public class BlogController {
         if (!CollectionUtils.isEmpty(blogSet)) {
             blogSet.forEach(blogId -> {
                 Blog blog = blogService.getBlogFromCache(blogId);
+                if (blog.getStatus() == 2) {
+                    Blog fromBlog = (Blog) this.redisTemplate.opsForValue().get(CacheConstant.BLOG_KEY + blog.getContent());
+                    blog.setFromBlog(fromBlog);
+                }
                 blogList.add(blog);
             });
         }
@@ -119,12 +143,15 @@ public class BlogController {
         if (!CollectionUtils.isEmpty(blogSet)) {
             blogSet.forEach(blogId -> {
                 Blog blog = blogService.getBlogFromCache(blogId);
+                if (blog.getStatus() == 2) {
+                    Blog fromBlog = (Blog) this.redisTemplate.opsForValue().get(CacheConstant.BLOG_KEY + blog.getContent());
+                    blog.setFromBlog(fromBlog);
+                }
                 blogList.add(blog);
             });
         }
         return Result.success(blogList);
     }
-
 
     @RequiresAuthentication
     @GetMapping("/myBlogs")
@@ -179,10 +206,33 @@ public class BlogController {
                 pictureService.save(picture);
             }
         }
-
-
         return Result.success("success");
+    }
 
+    @PostMapping("/searchBlog")
+    public Result searchBlog(@RequestParam String keyWords, @RequestParam(defaultValue = "1") Integer currentPage) {
+        List<Blog> blogList = new ArrayList<>();
+        Page page = new Page(currentPage, 5);
+        IPage<Blog> pageData = blogService.page( page, new QueryWrapper<Blog>().like("content", keyWords).orderByDesc("create_date"));
+        List<Blog> blogs = pageData.getRecords();
+        blogs.forEach(blog -> {
+            String blogKey = CacheConstant.BLOG_KEY + blog.getId();
+            if (!this.redisTemplate.hasKey(blogKey)) {
+                blog = blogService.addBlog2BlogCache(blog);
+                if (blog.getStatus() == 2) {
+                    Blog fromBlog = (Blog) this.redisTemplate.opsForValue().get(CacheConstant.BLOG_KEY + blog.getContent());
+                    blog.setFromBlog(fromBlog);
+                }
+                blogList.add(blog);
+            }
+            Blog cacheBlog = blogService.getBlogFromCache(blog.getId());
+            if (blog.getStatus() == 2) {
+                Blog fromBlog = (Blog) this.redisTemplate.opsForValue().get(CacheConstant.BLOG_KEY + cacheBlog.getContent());
+                cacheBlog.setFromBlog(fromBlog);
+            }
+            blogList.add(cacheBlog);
+        });
+        return Result.success(blogList);
     }
 
     @PostMapping("/delete/{id}")
