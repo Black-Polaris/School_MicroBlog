@@ -53,7 +53,7 @@ public class LoveController {
         love.setCreateDate(new Date());
         if (loveService.save(love)) {
             this.redisTemplate.opsForSet().add(CacheConstant.LOVE_KEY + map.getId(), ShiroUtil.getProfile().getId());
-//           // 对相应的热搜微博的热度进行增加
+            // 对相应的热搜微博的热度进行增加
             long hour = System.currentTimeMillis()/(1000*60*60);
             this.redisTemplate.opsForZSet().incrementScore(CacheConstant.HOUR_KEY + hour, map.getId(), 1);
             return Result.success("success");

@@ -4,17 +4,12 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.common.Result;
-import com.example.entity.Blog;
-import com.example.entity.CacheConstant;
-import com.example.entity.Picture;
-import com.example.service.BlogService;
-import com.example.service.PictureService;
-import com.example.service.UserService;
+import com.example.entity.*;
+import com.example.service.*;
 import com.example.util.ShiroUtil;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,6 +31,15 @@ public class BlogController {
 
     @Autowired
     PictureService pictureService;
+
+    @Autowired
+    CommentService commentService;
+
+    @Autowired
+    LoveService loveService;
+
+    @Autowired
+    RelayService relayService;
 
     @Autowired
     RedisTemplate redisTemplate;
@@ -150,6 +154,7 @@ public class BlogController {
         return Result.success(blogList);
     }
 
+    // 查看我的微博
     @RequiresAuthentication
     @GetMapping("/myBlogs")
     public Result myBlogs(@RequestParam(defaultValue = "1") Integer currentPage) {
@@ -178,13 +183,7 @@ public class BlogController {
         return Result.success(blogList);
     }
 
-    @GetMapping("/{id}")
-    public Result detail(@PathVariable Long id) {
-        Blog blog = blogService.getById(id);
-        Assert.notNull(blog, "该博客已经被删除");
-        return Result.success(blog);
-    }
-
+    // 添加微博
     @RequiresAuthentication
     @PostMapping("/addBlog")
     public Result addBlog(@RequestParam String textarea, MultipartFile[] files, HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -206,11 +205,10 @@ public class BlogController {
         return Result.success("success");
     }
 
+    // 查找微博
     @PostMapping("/searchBlog")
     public Result searchBlog(@RequestParam String keyWords, @RequestParam(defaultValue = "1") Integer currentPage) {
-
-            this.redisTemplate.opsForZSet().incrementScore(CacheConstant.HotSearch, keyWords, 1);
-
+        this.redisTemplate.opsForZSet().incrementScore(CacheConstant.HotSearch, keyWords, 1);
         List<Blog> blogList = new ArrayList<>();
         Page page = new Page(currentPage, 5);
         IPage<Blog> pageData = blogService.page( page, new QueryWrapper<Blog>().like("content", keyWords).orderByDesc("create_date"));
@@ -235,27 +233,36 @@ public class BlogController {
         return Result.success(blogList);
     }
 
+    // 热搜榜
     @GetMapping("/hotSearch")
     public Result hotSearch() {
         Set set = this.redisTemplate.opsForZSet().reverseRangeWithScores(CacheConstant.HotSearch, 0, 50);
         return Result.success(set);
     }
 
+    // 随机热搜榜
     @GetMapping("/randomHotSearch")
     public Result randomHotSearch() {
         Set set = this.redisTemplate.opsForZSet().reverseRange(CacheConstant.HotSearch, 0, 30);
         List list = new ArrayList(set);
         Set result = new HashSet();
-        while(result.size() < 10) {
+        while(result.size() < 10 && result.size() > 0) {
             int randomIndex = new Random().nextInt(list.size());
             result.add(list.get(randomIndex));
         }
         return Result.success(result);
     }
 
-    @PostMapping("/delete/{id}")
-    public Result delete(@PathVariable Long id) {
-        boolean exist = blogService.removeById(id);
+    // 删除微博
+    @RequiresAuthentication
+    @PostMapping("/delete")
+    public Result delete(@RequestParam Long blogId) {
+        Blog blog = blogService.getById(blogId);
+        blog.setStatus(-1);
+        this.redisTemplate.delete(CacheConstant.BLOG_KEY + blogId);
+        boolean exist = blogService.saveOrUpdate(blog);
+        Blog newBlog = blogService.getById(blogId);
+        this.redisTemplate.opsForValue().set(CacheConstant.BLOG_KEY + newBlog.getId(), newBlog);
         if (exist == false) {
             return Result.fail("微博删除失败");
         } else {

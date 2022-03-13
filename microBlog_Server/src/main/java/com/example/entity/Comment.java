@@ -1,7 +1,10 @@
 package com.example.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+
 /**
  * <p>
  *
@@ -10,10 +13,11 @@ import com.baomidou.mybatisplus.annotation.TableId;
  * @author shenqinbin
  * @since 2022-03-04
  */
+@TableName(value = "comment", resultMap = "CommentMapper")
 public class Comment extends BaseEntity  {
 
     @TableId(value = "comment_id", type = IdType.AUTO)
-    private Integer commentId;
+    private Integer id;
 
     private Integer userId;
 
@@ -21,12 +25,15 @@ public class Comment extends BaseEntity  {
 
     private String commentContent;
 
-    public Integer getCommentId() {
-        return commentId;
+    @TableField(exist = false)
+    private User user;
+
+    public Integer getId() {
+        return id;
     }
 
-    public void setCommentId(Integer commentId) {
-        this.commentId = commentId;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Integer getUserId() {
@@ -51,5 +58,13 @@ public class Comment extends BaseEntity  {
 
     public void setCommentContent(String commentContent) {
         this.commentContent = commentContent;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

@@ -32,7 +32,7 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements Bl
         relayMap.put("relaySize", this.redisTemplate.opsForSet().size(CacheConstant.RELAY_KEY + blog.getId()) == 0 ? 0 : this.redisTemplate.opsForSet().size(CacheConstant.RELAY_KEY + blog.getId()));
         relayMap.put("isRelay", this.redisTemplate.opsForSet().isMember(CacheConstant.RELAY_KEY + blog.getId(), ShiroUtil.getProfile() == null ? 0 : ShiroUtil.getProfile().getId()));
         blog.setRelay(relayMap);
-        blog.setComment(this.redisTemplate.opsForValue().size(CacheConstant.COMMENT_KEY + blog.getId()) == 0 ? 0 : this.redisTemplate.opsForValue().size(CacheConstant.COMMENT_KEY + blog.getId()));
+        blog.setComment(this.redisTemplate.opsForSet().size(CacheConstant.COMMENT_KEY + blog.getId()) == 0 ? 0 : this.redisTemplate.opsForSet().size(CacheConstant.COMMENT_KEY + blog.getId()));
         Map loveMap = new HashMap();
         loveMap.put("loveSize", this.redisTemplate.opsForSet().size(CacheConstant.LOVE_KEY + blog.getId()) == 0 ? 0 : this.redisTemplate.opsForSet().size(CacheConstant.LOVE_KEY + blog.getId()));
         loveMap.put("isLove", this.redisTemplate.opsForSet().isMember(CacheConstant.LOVE_KEY + blog.getId(), ShiroUtil.getProfile() == null ? 0 : ShiroUtil.getProfile().getId()));
@@ -51,7 +51,7 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements Bl
         relayMap.put("relaySize", this.redisTemplate.opsForSet().size(CacheConstant.RELAY_KEY + blog.getId()) == 0 ? 0 : this.redisTemplate.opsForSet().size(CacheConstant.RELAY_KEY + blog.getId()));
         relayMap.put("isRelay", this.redisTemplate.opsForSet().isMember(CacheConstant.RELAY_KEY + blog.getId(), ShiroUtil.getProfile() == null ? 0 : ShiroUtil.getProfile().getId()));
         blog.setRelay(relayMap);
-        blog.setComment(this.redisTemplate.opsForValue().size(CacheConstant.COMMENT_KEY + blog.getId()) == 0 ? 0 : this.redisTemplate.opsForValue().size(CacheConstant.COMMENT_KEY + blog.getId()));
+        blog.setComment(this.redisTemplate.opsForSet().size(CacheConstant.COMMENT_KEY + blog.getId()) == 0 ? 0 : this.redisTemplate.opsForSet().size(CacheConstant.COMMENT_KEY + blog.getId()));
         Map loveMap = new HashMap();
         loveMap.put("loveSize", this.redisTemplate.opsForSet().size(CacheConstant.LOVE_KEY + blog.getId()) == 0 ? 0 : this.redisTemplate.opsForSet().size(CacheConstant.LOVE_KEY + blog.getId()));
         loveMap.put("isLove", this.redisTemplate.opsForSet().isMember(CacheConstant.LOVE_KEY + blog.getId(), ShiroUtil.getProfile() == null ? 0 : ShiroUtil.getProfile().getId()));
@@ -70,7 +70,7 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements Bl
         relayMap.put("relaySize", this.redisTemplate.opsForSet().size(CacheConstant.RELAY_KEY + blog.getId()) == 0 ? 0 : this.redisTemplate.opsForSet().size(CacheConstant.RELAY_KEY + blog.getId()));
         relayMap.put("isRelay", this.redisTemplate.opsForSet().isMember(CacheConstant.RELAY_KEY + blog.getId(), ShiroUtil.getProfile() == null ? 0 : ShiroUtil.getProfile().getId()));
         blog.setRelay(relayMap);
-        blog.setComment(this.redisTemplate.opsForValue().size(CacheConstant.COMMENT_KEY + blog.getId()) == 0 ? 0 : this.redisTemplate.opsForValue().size(CacheConstant.COMMENT_KEY + blog.getId()));
+        blog.setComment(this.redisTemplate.opsForSet().size(CacheConstant.COMMENT_KEY + blog.getId()) == 0 ? 0 : this.redisTemplate.opsForSet().size(CacheConstant.COMMENT_KEY + blog.getId()));
         Map loveMap = new HashMap();
         loveMap.put("loveSize", this.redisTemplate.opsForSet().size(CacheConstant.LOVE_KEY + blog.getId()) == 0 ? 0 : this.redisTemplate.opsForSet().size(CacheConstant.LOVE_KEY + blog.getId()));
         loveMap.put("isLove", this.redisTemplate.opsForSet().isMember(CacheConstant.LOVE_KEY + blog.getId(), ShiroUtil.getProfile() == null ? 0 : ShiroUtil.getProfile().getId()));

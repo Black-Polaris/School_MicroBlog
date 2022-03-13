@@ -2,6 +2,7 @@ package com.example.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 
 /**
  * <p>
@@ -11,6 +12,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
  * @author shenqinbin
  * @since 2022-03-04
  */
+@TableName(value = "picture", resultMap = "PictureMapper")
 public class Picture extends BaseEntity  {
 
     @TableId(value = "picture_id", type = IdType.AUTO)
