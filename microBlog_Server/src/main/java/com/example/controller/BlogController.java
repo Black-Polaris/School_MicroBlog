@@ -22,10 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequestMapping("/blog")
@@ -211,6 +208,9 @@ public class BlogController {
 
     @PostMapping("/searchBlog")
     public Result searchBlog(@RequestParam String keyWords, @RequestParam(defaultValue = "1") Integer currentPage) {
+
+            this.redisTemplate.opsForZSet().incrementScore(CacheConstant.HotSearch, keyWords, 1);
+
         List<Blog> blogList = new ArrayList<>();
         Page page = new Page(currentPage, 5);
         IPage<Blog> pageData = blogService.page( page, new QueryWrapper<Blog>().like("content", keyWords).orderByDesc("create_date"));
@@ -233,6 +233,24 @@ public class BlogController {
             blogList.add(cacheBlog);
         });
         return Result.success(blogList);
+    }
+
+    @GetMapping("/hotSearch")
+    public Result hotSearch() {
+        Set set = this.redisTemplate.opsForZSet().reverseRangeWithScores(CacheConstant.HotSearch, 0, 50);
+        return Result.success(set);
+    }
+
+    @GetMapping("/randomHotSearch")
+    public Result randomHotSearch() {
+        Set set = this.redisTemplate.opsForZSet().reverseRange(CacheConstant.HotSearch, 0, 30);
+        List list = new ArrayList(set);
+        Set result = new HashSet();
+        while(result.size() < 10) {
+            int randomIndex = new Random().nextInt(list.size());
+            result.add(list.get(randomIndex));
+        }
+        return Result.success(result);
     }
 
     @PostMapping("/delete/{id}")

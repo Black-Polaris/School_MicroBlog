@@ -22,5 +22,7 @@ public class CacheConstant {
 
     public static final String RELAY_KEY ="relay:";
 
+    public static final String HotSearch = "search";
+
 
 }
