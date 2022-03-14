@@ -270,5 +270,33 @@ public class BlogController {
         }
     }
 
+    // 查找用户微博
+    @PostMapping("/userBlogs")
+    public Result userBlogs(@RequestParam Long userId, @RequestParam(defaultValue = "1") Integer currentPage) {
+        User user = userService.getById(userId);
+        List<Blog> blogList = new ArrayList<>();
+        Page page = new Page(currentPage, 5);
+        IPage<Blog> pageData = blogService.page( page, new QueryWrapper<Blog>().like("user_id", userId).orderByDesc("create_date"));
+        List<Blog> blogs = pageData.getRecords();
+        blogs.forEach(blog -> {
+            String blogKey = CacheConstant.BLOG_KEY + blog.getId();
+            if (!this.redisTemplate.hasKey(blogKey)) {
+                blog = blogService.addBlog2BlogCache(blog);
+                if (blog.getStatus() == 2) {
+                    Blog fromBlog = (Blog) this.redisTemplate.opsForValue().get(CacheConstant.BLOG_KEY + blog.getContent());
+                    blog.setFromBlog(fromBlog);
+                }
+                blogList.add(blog);
+            }
+            Blog cacheBlog = blogService.getBlogFromCache(blog.getId());
+            if (blog.getStatus() == 2) {
+                Blog fromBlog = (Blog) this.redisTemplate.opsForValue().get(CacheConstant.BLOG_KEY + cacheBlog.getContent());
+                cacheBlog.setFromBlog(fromBlog);
+            }
+            blogList.add(cacheBlog);
+        });
+        return Result.success(blogList);
+    }
+
 }
 

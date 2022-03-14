@@ -15,6 +15,7 @@ import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.Assert;
+import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -89,6 +90,17 @@ public class UserController {
         return Result.success(users);
     }
 
+    // 通过用户id查找用户
+    @GetMapping("/findUserById")
+    public Result findUserById (@RequestParam Long userId) {
+        User user = userService.getById(userId);
+        if (ObjectUtils.isEmpty(user)) {
+            return Result.fail("查询不到用户");
+        }
+        Avatar avatar = avatarService.getOne(new QueryWrapper<Avatar>().eq("user_id", user.getId()).orderByDesc("create_date").last("LIMIT 1"));
+        user.setAvatar(avatar);
+        return Result.success(user);
+    }
 
 //  TODO 如下待删除
     @GetMapping("/{id}")
