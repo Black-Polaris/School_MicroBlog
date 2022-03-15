@@ -19,6 +19,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -100,6 +101,22 @@ public class UserController {
         Avatar avatar = avatarService.getOne(new QueryWrapper<Avatar>().eq("user_id", user.getId()).orderByDesc("create_date").last("LIMIT 1"));
         user.setAvatar(avatar);
         return Result.success(user);
+    }
+
+    // 添加新用户
+    @PostMapping("/addUser")
+    public Result addUser(@RequestBody User user) {
+        user.setCreateDate(new Date());
+        if (userService.save(user)) {
+            Avatar avatar = new Avatar();
+            avatar.setUserId(user.getId());
+            avatar.setAvatarUrl("0.jpeg");
+            avatar.setCreateDate(new Date());
+            avatarService.save(avatar);
+            return Result.success(user);
+        } else {
+            return Result.fail("新建失败");
+        }
     }
 
 //  TODO 如下待删除

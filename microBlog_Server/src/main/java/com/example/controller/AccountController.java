@@ -1,12 +1,12 @@
 package com.example.controller;
 
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.map.MapUtil;
-import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.common.Result;
 import com.example.dto.LoginDto;
+import com.example.entity.Avatar;
 import com.example.entity.User;
+import com.example.service.AvatarService;
 import com.example.service.UserService;
 import com.example.util.JwtUtils;
 import org.apache.shiro.SecurityUtils;
@@ -27,6 +27,9 @@ public class AccountController {
     UserService userService;
 
     @Autowired
+    AvatarService avatarService;
+
+    @Autowired
     JwtUtils jwtUtils;
 
     @PostMapping("/login")
@@ -34,10 +37,14 @@ public class AccountController {
         User user = userService.getOne(new QueryWrapper<User>().eq("username", loginDto.getUsername()));
         Assert.notNull(user, "用户不存在");
 
+        if (user.getAvatarId() == 0) {
+            Avatar avatar = avatarService.getOne(new QueryWrapper<Avatar>().eq("user_id", user.getId()).orderByDesc("create_date").last("LIMIT 1"));
+            user.setAvatarId(avatar.getId());
+            user.setAvatar(avatar);
+        }
         if (!user.getPassword().equals(loginDto.getPassword())) {
             return Result.fail("密码不正确");
         }
-        // TODO 为什么获取不到secret值
         String jwt = jwtUtils.generateToken(user.getId());
 
         response.setHeader("Authorization", jwt);
