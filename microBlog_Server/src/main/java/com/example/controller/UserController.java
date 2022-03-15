@@ -9,14 +9,12 @@ import com.example.service.AvatarService;
 import com.example.service.BlogService;
 import com.example.service.UserService;
 import com.example.util.ShiroUtil;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -118,46 +116,4 @@ public class UserController {
             return Result.fail("新建失败");
         }
     }
-
-//  TODO 如下待删除
-    @GetMapping("/{id}")
-    public User obj(@PathVariable("id") int id){
-        User u = new User();
-        u.setUsername("111");
-        u.setPassword("2222");
-        userService.save(u);
-        return u;
-
-    }
-
-    @RequiresAuthentication
-    @RequestMapping("/test")
-    public Result test() {
-        User user = userService.getById(1L);
-        return Result.success(user);
-    }
-
-    @RequestMapping("/save")
-    public Result save(@Validated @RequestBody User user) {
-
-        return Result.success(user);
-    }
-
-    @RequestMapping("/redisTest")
-    public Result redisTest() {
-
-        List<User> users = mapper.convertValue(redisTemplate.opsForZSet().range("users:user", 0, -1), new TypeReference<List<User>>() {});
-//        List<User> user = (List<User>) redisTemplate.opsForZSet().range("user",0,-1);
-
-        if (users.size() == 0){
-            users = userService.list(new QueryWrapper<User>().orderByAsc("create_date"));
-            users.forEach(u -> {
-                redisTemplate.opsForZSet().add("users:user", u, u.getId()+u.getAvatarId());
-            });
-        }
-        return Result.success(users);
-    }
-
-
-
 }

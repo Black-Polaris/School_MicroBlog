@@ -24,5 +24,7 @@ public class CacheConstant {
 
     public static final String HotSearch = "search";
 
+    public static final String Message = "message";
+
 
 }

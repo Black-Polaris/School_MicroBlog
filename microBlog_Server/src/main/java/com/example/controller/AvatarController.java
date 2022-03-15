@@ -8,6 +8,7 @@ import com.example.entity.User;
 import com.example.service.AvatarService;
 import com.example.service.BlogService;
 import com.example.service.UserService;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +35,7 @@ public class AvatarController {
     @Autowired
     BlogService blogService;
 
+    @RequiresAuthentication
     @PostMapping("/uploadAvatar")
     public Result upload(@RequestParam MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws IOException {
         Avatar avatar = avatarService.upload(file);
@@ -52,12 +54,4 @@ public class AvatarController {
         }
         return Result.success(newAvatar);
     }
-
-    // TODO DELETE
-    @PostMapping("/test")
-    public Avatar test() {
-        Avatar avatar = avatarService.getById(18);
-        return avatar;
-    }
-
 }
