@@ -276,7 +276,7 @@ public class BlogController {
         User user = userService.getById(userId);
         List<Blog> blogList = new ArrayList<>();
         Page page = new Page(currentPage, 5);
-        IPage<Blog> pageData = blogService.page( page, new QueryWrapper<Blog>().like("user_id", userId).orderByDesc("create_date"));
+        IPage<Blog> pageData = blogService.page( page, new QueryWrapper<Blog>().eq("user_id", userId).orderByDesc("create_date"));
         List<Blog> blogs = pageData.getRecords();
         blogs.forEach(blog -> {
             String blogKey = CacheConstant.BLOG_KEY + blog.getId();

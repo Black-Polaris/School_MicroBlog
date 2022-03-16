@@ -3,10 +3,11 @@
 <mapper namespace="com.example.mapper.MessageMapper">
     <resultMap id="MessageMapper" type="com.example.entity.Message">
         <id property="id" column="message_id"></id>
-        <result property="userId" column="user_id"></result>
-        <result property="message" column="message"></result>
+        <result property="fromId" column="from_id"></result>
+        <result property="toId" column="to_id"></result>
         <result property="createDate" column="create_date"></result>
-        <association property="user" column="user_id" select="findUserByUserId"></association>
+        <association property="fromUser" column="from_id" select="findUserByUserId"></association>
+        <association property="toUser" column="to_id" select="findUserByUserId"></association>
     </resultMap>
 
     <select id="findUserByUserId" parameterType="int" resultMap="com.example.mapper.UserMapper.UserMapper">

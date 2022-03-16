@@ -11,7 +11,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
  * @author shenqinbin
  * @since 2022-03-04
  */
-public class Relation  {
+public class Relation extends BaseEntity{
 
     @TableId(value = "relation_id", type = IdType.AUTO)
     private Integer relationId;

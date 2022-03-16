@@ -4,9 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.common.Result;
 import com.example.entity.Avatar;
 import com.example.entity.Blog;
+import com.example.entity.Relation;
 import com.example.entity.User;
 import com.example.service.AvatarService;
 import com.example.service.BlogService;
+import com.example.service.RelationService;
 import com.example.service.UserService;
 import com.example.util.ShiroUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,8 +19,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("/user")
@@ -35,6 +36,9 @@ public class UserController {
 
     @Autowired
     RedisTemplate redisTemplate;
+
+    @Autowired
+    RelationService relationService;
 
     @Autowired
     ObjectMapper mapper;
@@ -116,4 +120,23 @@ public class UserController {
             return Result.fail("新建失败");
         }
     }
+
+    // 查看好友
+    @PostMapping("/getFriends")
+    public Result getFriends(@RequestParam("id") Long id) {
+        List<Relation> list = relationService.list(new QueryWrapper<Relation>().eq("user_id", id).or().eq("follower_id", id));
+        Set<Integer> set = new HashSet<>();
+        for (Relation relation : list) {
+            set.add(relation.getUserId());
+            set.add(relation.getFollowerId());
+        }
+        List<User> users = new ArrayList<>();
+        for (Integer i : set) {
+            if (i != 0){
+                users.add(userService.getById(i));
+            }
+        }
+        return Result.success(users);
+    }
+
 }
