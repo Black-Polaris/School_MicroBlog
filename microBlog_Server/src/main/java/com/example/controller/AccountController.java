@@ -61,23 +61,4 @@ public class AccountController {
         return Result.success(null);
     }
 
-    @PostMapping("/testLogin")
-    public Result logint(@Validated @RequestBody LoginDto loginDto, HttpServletResponse response) {
-        User user = userService.getOne(new QueryWrapper<User>().eq("username", loginDto.getUsername()));
-
-//        User user = userService.findByUserName(loginDto.getUsername());
-        Assert.notNull(user, "用户不存在");
-
-        if (!user.getPassword().equals(loginDto.getPassword())) {
-            return Result.fail("密码不正确");
-        }
-
-        String jwt = jwtUtils.generateToken(user.getId());
-
-        response.setHeader("Authorization", jwt);
-        response.setHeader("Access-control-Expose-Headers", "Authorization");
-
-        return Result.success(user);
-    }
-
 }

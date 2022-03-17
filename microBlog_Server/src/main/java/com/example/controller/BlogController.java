@@ -48,7 +48,7 @@ public class BlogController {
     @GetMapping("/blogs")
     public Result list(@RequestParam(defaultValue = "1") Integer currentPage) {
         List<Blog> blogList = new ArrayList<>();
-        Page page = new Page(currentPage, 5);
+        Page page = new Page(currentPage, 10);
         IPage<Blog> pageData = blogService.page( page, new QueryWrapper<Blog>().orderByDesc("create_date"));
         List<Blog> blogs = pageData.getRecords();
         blogs.forEach(blog -> {
@@ -76,9 +76,9 @@ public class BlogController {
     public Result getHour(@RequestParam Integer currentPage) {
         List<Blog> blogList = new ArrayList<>();
         long hour = System.currentTimeMillis()/(1000*60*60);
-        Set blogSet = this.redisTemplate.opsForZSet().reverseRange(CacheConstant.HOUR_KEY + hour, 5*(currentPage-1), 5*currentPage-1);
+        Set blogSet = this.redisTemplate.opsForZSet().reverseRange(CacheConstant.HOUR_KEY + hour, 10*(currentPage-1), 10*currentPage-1);
         if (CollectionUtils.isEmpty(blogSet)) {
-            List<Blog> blogs = blogService.list(new QueryWrapper<Blog>().orderByDesc("create_date").last("Limit "+ 5*(currentPage-1)+","+5*currentPage));
+            List<Blog> blogs = blogService.list(new QueryWrapper<Blog>().orderByDesc("create_date").last("Limit "+ 10*(currentPage-1)+","+10*currentPage));
             blogs.forEach(blog -> {
                 blog = blogService.addBlog2Cache(blog, hour);
                 if (blog.getStatus() == 2) {
@@ -104,7 +104,7 @@ public class BlogController {
     @GetMapping("/getDay")
     public Result getDay(@RequestParam Integer currentPage) {
         List<Blog> blogList = new ArrayList<>();
-        Set blogSet = this.redisTemplate.opsForZSet().reverseRange(CacheConstant.DAY_KEY,5*(currentPage-1), 5*currentPage-1);
+        Set blogSet = this.redisTemplate.opsForZSet().reverseRange(CacheConstant.DAY_KEY,10*(currentPage-1), 10*currentPage-1);
         if (!CollectionUtils.isEmpty(blogSet)) {
             blogSet.forEach(blogId -> {
                 Blog blog = blogService.getBlogFromCache(blogId);
@@ -122,7 +122,7 @@ public class BlogController {
     @GetMapping("/getWeek")
     public Result getWeek(@RequestParam Integer currentPage) {
         List<Blog> blogList = new ArrayList<>();
-        Set blogSet = this.redisTemplate.opsForZSet().reverseRange(CacheConstant.WEEK_KEY,5*(currentPage-1), 5*currentPage-1);
+        Set blogSet = this.redisTemplate.opsForZSet().reverseRange(CacheConstant.WEEK_KEY,10*(currentPage-1), 10*currentPage-1);
         if (!CollectionUtils.isEmpty(blogSet)) {
             blogSet.forEach(blogId -> {
                 Blog blog = blogService.getBlogFromCache(blogId);
@@ -140,7 +140,7 @@ public class BlogController {
     @GetMapping("/getMonth")
     public Result getMonth(@RequestParam Integer currentPage) {
         List<Blog> blogList = new ArrayList<>();
-        Set blogSet = this.redisTemplate.opsForZSet().reverseRange(CacheConstant.MONTH_KEY,5*(currentPage-1), 5*currentPage-1);
+        Set blogSet = this.redisTemplate.opsForZSet().reverseRange(CacheConstant.MONTH_KEY,10*(currentPage-1), 10*currentPage-1);
         if (!CollectionUtils.isEmpty(blogSet)) {
             blogSet.forEach(blogId -> {
                 Blog blog = blogService.getBlogFromCache(blogId);
@@ -159,7 +159,7 @@ public class BlogController {
     @GetMapping("/myBlogs")
     public Result myBlogs(@RequestParam(defaultValue = "1") Integer currentPage) {
         List<Blog> blogList = new ArrayList<>();
-        Page page = new Page(currentPage, 5);
+        Page page = new Page(currentPage, 10);
         IPage<Blog> pageData = blogService.page(page, new QueryWrapper<Blog>().eq("user_id", ShiroUtil.getProfile().getId()).orderByDesc("create_date"));
         List<Blog> blogs = pageData.getRecords();
         blogs.forEach(blog -> {
@@ -210,7 +210,7 @@ public class BlogController {
     public Result searchBlog(@RequestParam String keyWords, @RequestParam(defaultValue = "1") Integer currentPage) {
         this.redisTemplate.opsForZSet().incrementScore(CacheConstant.HotSearch, keyWords, 1);
         List<Blog> blogList = new ArrayList<>();
-        Page page = new Page(currentPage, 5);
+        Page page = new Page(currentPage, 10);
         IPage<Blog> pageData = blogService.page( page, new QueryWrapper<Blog>().like("content", keyWords).orderByDesc("create_date"));
         List<Blog> blogs = pageData.getRecords();
         blogs.forEach(blog -> {
@@ -275,7 +275,7 @@ public class BlogController {
     public Result userBlogs(@RequestParam Long userId, @RequestParam(defaultValue = "1") Integer currentPage) {
         User user = userService.getById(userId);
         List<Blog> blogList = new ArrayList<>();
-        Page page = new Page(currentPage, 5);
+        Page page = new Page(currentPage, 10);
         IPage<Blog> pageData = blogService.page( page, new QueryWrapper<Blog>().eq("user_id", userId).orderByDesc("create_date"));
         List<Blog> blogs = pageData.getRecords();
         blogs.forEach(blog -> {
