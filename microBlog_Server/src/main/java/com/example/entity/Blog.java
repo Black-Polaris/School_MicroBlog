@@ -41,6 +41,9 @@ public class Blog extends BaseEntity  {
     @TableField(exist = false)
     private Map love;
 
+    @TableField(exist = false)
+    private Boolean hadFollow;
+
     public Integer getId() {
         return id;
     }
@@ -127,5 +130,13 @@ public class Blog extends BaseEntity  {
 
     public void setCommentList(List<Comment> commentList) {
         this.commentList = commentList;
+    }
+
+    public Boolean getHadFollow() {
+        return hadFollow;
+    }
+
+    public void setHadFollow(Boolean hadFollow) {
+        this.hadFollow = hadFollow;
     }
 }

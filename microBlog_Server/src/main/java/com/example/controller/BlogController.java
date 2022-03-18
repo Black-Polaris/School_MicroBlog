@@ -298,5 +298,36 @@ public class BlogController {
         return Result.success(blogList);
     }
 
+    // 查找关注微博
+    @GetMapping("/followBlogs")
+    public Result followBlogs(@RequestParam(defaultValue = "1") Integer currentPage) {
+        Set members = this.redisTemplate.opsForSet().members(CacheConstant.Follower + ShiroUtil.getProfile().getId());
+        List<Blog> blogList = new ArrayList<>();
+        if (CollectionUtils.isEmpty(members)) {
+            return Result.success(blogList);
+        }
+        Page page = new Page(currentPage, 10);
+        IPage<Blog> pageData = blogService.page( page, new QueryWrapper<Blog>().in("user_id", members).orderByDesc("create_date"));
+        List<Blog> blogs = pageData.getRecords();
+        blogs.forEach(blog -> {
+            String blogKey = CacheConstant.BLOG_KEY + blog.getId();
+            if (!this.redisTemplate.hasKey(blogKey)) {
+                blog = blogService.addBlog2BlogCache(blog);
+                if (blog.getStatus() == 2) {
+                    Blog fromBlog = (Blog) this.redisTemplate.opsForValue().get(CacheConstant.BLOG_KEY + blog.getContent());
+                    blog.setFromBlog(fromBlog);
+                }
+                blogList.add(blog);
+            }
+            Blog cacheBlog = blogService.getBlogFromCache(blog.getId());
+            if (cacheBlog.getStatus() == 2) {
+                Blog fromBlog = (Blog) this.redisTemplate.opsForValue().get(CacheConstant.BLOG_KEY + blog.getContent());
+                cacheBlog.setFromBlog(fromBlog);
+            }
+            blogList.add(cacheBlog);
+        });
+        return Result.success(blogList);
+    }
+
 }
 

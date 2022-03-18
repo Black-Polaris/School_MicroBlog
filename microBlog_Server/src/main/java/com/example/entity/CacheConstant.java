@@ -26,5 +26,9 @@ public class CacheConstant {
 
     public static final String Message = "message";
 
+    public static final String Follow = "follow:";
+
+    public static final String Follower = "follower:";
+
 
 }

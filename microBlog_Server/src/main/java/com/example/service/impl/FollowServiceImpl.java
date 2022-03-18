@@ -1,8 +1,8 @@
 package com.example.service.impl;
 
-import com.example.entity.Reply;
-import com.example.mapper.ReplyMapper;
-import com.example.service.ReplyService;
+import com.example.entity.Follow;
+import com.example.mapper.FollowMapper;
+import com.example.service.FollowService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since 2022-03-04
  */
 @Service
-public class ReplyServiceImpl extends ServiceImpl<ReplyMapper, Reply> implements ReplyService {
+public class FollowServiceImpl extends ServiceImpl<FollowMapper, Follow> implements FollowService {
 
 }

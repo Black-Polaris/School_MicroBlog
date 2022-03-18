@@ -37,6 +37,8 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements Bl
         loveMap.put("loveSize", this.redisTemplate.opsForSet().size(CacheConstant.LOVE_KEY + blog.getId()) == 0 ? 0 : this.redisTemplate.opsForSet().size(CacheConstant.LOVE_KEY + blog.getId()));
         loveMap.put("isLove", this.redisTemplate.opsForSet().isMember(CacheConstant.LOVE_KEY + blog.getId(), ShiroUtil.getProfile() == null ? 0 : ShiroUtil.getProfile().getId()));
         blog.setLove(loveMap);
+        Boolean hadFollow = this.redisTemplate.opsForSet().isMember(CacheConstant.Follow + blog.getUserId(), ShiroUtil.getProfile() == null ? 0 : ShiroUtil.getProfile().getId());
+        blog.setHadFollow(hadFollow);
         this.redisTemplate.opsForZSet().add(CacheConstant.HOUR_KEY + hour, blog.getId(),
                 this.redisTemplate.opsForSet().size("relay:" + blog.getId()) +
                         this.redisTemplate.opsForValue().size("comment:" + blog.getId()) +
@@ -56,6 +58,8 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements Bl
         loveMap.put("loveSize", this.redisTemplate.opsForSet().size(CacheConstant.LOVE_KEY + blog.getId()) == 0 ? 0 : this.redisTemplate.opsForSet().size(CacheConstant.LOVE_KEY + blog.getId()));
         loveMap.put("isLove", this.redisTemplate.opsForSet().isMember(CacheConstant.LOVE_KEY + blog.getId(), ShiroUtil.getProfile() == null ? 0 : ShiroUtil.getProfile().getId()));
         blog.setLove(loveMap);
+        Boolean hadFollow = this.redisTemplate.opsForSet().isMember(CacheConstant.Follow + blog.getUserId(), ShiroUtil.getProfile() == null ? 0 : ShiroUtil.getProfile().getId());
+        blog.setHadFollow(hadFollow);
         return blog;
     }
 
@@ -75,6 +79,8 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements Bl
         loveMap.put("loveSize", this.redisTemplate.opsForSet().size(CacheConstant.LOVE_KEY + blog.getId()) == 0 ? 0 : this.redisTemplate.opsForSet().size(CacheConstant.LOVE_KEY + blog.getId()));
         loveMap.put("isLove", this.redisTemplate.opsForSet().isMember(CacheConstant.LOVE_KEY + blog.getId(), ShiroUtil.getProfile() == null ? 0 : ShiroUtil.getProfile().getId()));
         blog.setLove(loveMap);
+        Boolean hadFollow = this.redisTemplate.opsForSet().isMember(CacheConstant.Follow + blog.getUserId(), ShiroUtil.getProfile() == null ? 0 : ShiroUtil.getProfile().getId());
+        blog.setHadFollow(hadFollow);
         return blog;
     }
 }

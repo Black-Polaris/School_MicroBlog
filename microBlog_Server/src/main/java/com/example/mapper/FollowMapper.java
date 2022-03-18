@@ -1,6 +1,6 @@
 package com.example.mapper;
 
-import com.example.entity.Reply;
+import com.example.entity.Follow;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author shenqinbin
  * @since 2022-03-04
  */
-public interface ReplyMapper extends BaseMapper<Reply> {
+public interface FollowMapper extends BaseMapper<Follow> {
 
 }
