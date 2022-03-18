@@ -101,8 +101,8 @@ public class MyWebSocket {
             }
         } else {
             Relation relation = new Relation();
-            relation.setUserId(message.getFromId());
-            relation.setFollowerId(message.getToId());
+            relation.setFromId(message.getFromId());
+            relation.setToId(message.getToId());
             relation.setCreateDate(new Date());
             relationService.saveOrUpdate(relation);
 

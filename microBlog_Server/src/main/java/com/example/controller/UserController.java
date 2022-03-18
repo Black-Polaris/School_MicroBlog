@@ -127,8 +127,8 @@ public class UserController {
         List<Relation> list = relationService.list(new QueryWrapper<Relation>().eq("user_id", id).or().eq("follower_id", id));
         Set<Integer> set = new HashSet<>();
         for (Relation relation : list) {
-            set.add(relation.getUserId());
-            set.add(relation.getFollowerId());
+            set.add(relation.getFromId());
+            set.add(relation.getToId());
         }
         List<User> users = new ArrayList<>();
         for (Integer i : set) {

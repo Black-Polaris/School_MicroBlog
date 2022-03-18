@@ -16,11 +16,9 @@ public class Relation extends BaseEntity{
     @TableId(value = "relation_id", type = IdType.AUTO)
     private Integer relationId;
 
-    private Integer userId;
+    private Integer fromId;
 
-    private Integer followerId;
-
-    private Integer state;
+    private Integer toId;
 
     public Integer getRelationId() {
         return relationId;
@@ -30,27 +28,19 @@ public class Relation extends BaseEntity{
         this.relationId = relationId;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public Integer getFromId() {
+        return fromId;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setFromId(Integer fromId) {
+        this.fromId = fromId;
     }
 
-    public Integer getFollowerId() {
-        return followerId;
+    public Integer getToId() {
+        return toId;
     }
 
-    public void setFollowerId(Integer followerId) {
-        this.followerId = followerId;
-    }
-
-    public Integer getState() {
-        return state;
-    }
-
-    public void setState(Integer state) {
-        this.state = state;
+    public void setToId(Integer toId) {
+        this.toId = toId;
     }
 }
