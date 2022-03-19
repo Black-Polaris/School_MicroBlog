@@ -16,6 +16,7 @@ import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -108,23 +109,28 @@ public class UserController {
     // 添加新用户
     @PostMapping("/addUser")
     public Result addUser(@RequestBody User user) {
-        user.setCreateDate(new Date());
-        if (userService.save(user)) {
-            Avatar avatar = new Avatar();
-            avatar.setUserId(user.getId());
-            avatar.setAvatarUrl("0.jpeg");
-            avatar.setCreateDate(new Date());
-            avatarService.save(avatar);
-            return Result.success(user);
+        List<User> list = userService.list(new QueryWrapper<User>().eq("username", user.getUsername()).or().eq("nickname", user.getNickname()));
+        if (CollectionUtils.isEmpty(list)) {
+            user.setCreateDate(new Date());
+            if (userService.save(user)) {
+                Avatar avatar = new Avatar();
+                avatar.setUserId(user.getId());
+                avatar.setAvatarUrl("0.jpeg");
+                avatar.setCreateDate(new Date());
+                avatarService.save(avatar);
+                return Result.success(user);
+            } else {
+                return Result.fail("新建失败");
+            }
         } else {
-            return Result.fail("新建失败");
+            return Result.fail("用户名或昵称已被使用");
         }
     }
 
     // 查看好友
     @PostMapping("/getFriends")
     public Result getFriends(@RequestParam("id") Long id) {
-        List<Relation> list = relationService.list(new QueryWrapper<Relation>().eq("user_id", id).or().eq("follower_id", id));
+        List<Relation> list = relationService.list(new QueryWrapper<Relation>().eq("from_id", id).or().eq("to_id", id));
         Set<Integer> set = new HashSet<>();
         for (Relation relation : list) {
             set.add(relation.getFromId());
