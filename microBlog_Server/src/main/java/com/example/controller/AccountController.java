@@ -1,6 +1,5 @@
 package com.example.controller;
 
-import cn.hutool.core.lang.Assert;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.common.Result;
 import com.example.dto.LoginDto;
@@ -12,6 +11,7 @@ import com.example.util.JwtUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,7 +35,9 @@ public class AccountController {
     @PostMapping("/login")
     public Result login(@Validated @RequestBody LoginDto loginDto, HttpServletResponse response) {
         User user = userService.getOne(new QueryWrapper<User>().eq("username", loginDto.getUsername()));
-        Assert.notNull(user, "用户不存在");
+        if (ObjectUtils.isEmpty(user)) {
+            return Result.fail("用户不存在");
+        }
 
         if (user.getAvatarId() == 0) {
             Avatar avatar = avatarService.getOne(new QueryWrapper<Avatar>().eq("user_id", user.getId()).orderByDesc("create_date").last("LIMIT 1"));

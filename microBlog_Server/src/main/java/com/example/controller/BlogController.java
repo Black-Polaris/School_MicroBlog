@@ -299,6 +299,7 @@ public class BlogController {
     }
 
     // 查找关注微博
+    @RequiresAuthentication
     @GetMapping("/followBlogs")
     public Result followBlogs(@RequestParam(defaultValue = "1") Integer currentPage) {
         Set members = this.redisTemplate.opsForSet().members(CacheConstant.Follower + ShiroUtil.getProfile().getId());
