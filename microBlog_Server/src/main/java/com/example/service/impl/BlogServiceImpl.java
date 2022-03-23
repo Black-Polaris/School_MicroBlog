@@ -40,9 +40,9 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements Bl
         Boolean hadFollow = this.redisTemplate.opsForSet().isMember(CacheConstant.Follow + blog.getUserId(), ShiroUtil.getProfile() == null ? 0 : ShiroUtil.getProfile().getId());
         blog.setHadFollow(hadFollow);
         this.redisTemplate.opsForZSet().add(CacheConstant.HOUR_KEY + hour, blog.getId(),
-                this.redisTemplate.opsForSet().size("relay:" + blog.getId()) +
-                        this.redisTemplate.opsForValue().size("comment:" + blog.getId()) +
-                        this.redisTemplate.opsForSet().size("love:" + blog.getId()));
+                this.redisTemplate.opsForSet().size(CacheConstant.RELAY_KEY + blog.getId()) +
+                        this.redisTemplate.opsForSet().size(CacheConstant.COMMENT_KEY + blog.getId()) +
+                        this.redisTemplate.opsForSet().size(CacheConstant.LOVE_KEY + blog.getId()));
         return blog;
     }
 

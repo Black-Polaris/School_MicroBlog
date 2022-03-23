@@ -246,7 +246,7 @@ public class BlogController {
         Set set = this.redisTemplate.opsForZSet().reverseRange(CacheConstant.HotSearch, 0, 30);
         List list = new ArrayList(set);
         Set result = new HashSet();
-        while(result.size() < 10 && result.size() > 0) {
+        while(result.size() < 10 && result.size() >= 0) {
             int randomIndex = new Random().nextInt(list.size());
             result.add(list.get(randomIndex));
         }
