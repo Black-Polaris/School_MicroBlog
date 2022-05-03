@@ -27,8 +27,8 @@ shiro-redis:
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**Mapper.xml
 #  配置控制台输出SQL语句
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 # 配置Jwt
 microblog:

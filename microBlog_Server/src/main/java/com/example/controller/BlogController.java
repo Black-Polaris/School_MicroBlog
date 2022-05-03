@@ -73,7 +73,7 @@ public class BlogController {
 
     // 查找微博小时榜
     @GetMapping("/getHour")
-    public Result getHour(@RequestParam Integer currentPage) {
+    public Result getHour(@RequestParam(defaultValue = "1") Integer currentPage) {
         List<Blog> blogList = new ArrayList<>();
         long hour = System.currentTimeMillis()/(1000*60*60);
         Set blogSet = this.redisTemplate.opsForZSet().reverseRange(CacheConstant.HOUR_KEY + hour, 10*(currentPage-1), 10*currentPage-1);
@@ -102,7 +102,7 @@ public class BlogController {
 
     // 查找微博日榜
     @GetMapping("/getDay")
-    public Result getDay(@RequestParam Integer currentPage) {
+    public Result getDay(@RequestParam(defaultValue = "1") Integer currentPage) {
         List<Blog> blogList = new ArrayList<>();
         Set blogSet = this.redisTemplate.opsForZSet().reverseRange(CacheConstant.DAY_KEY,10*(currentPage-1), 10*currentPage-1);
         if (!CollectionUtils.isEmpty(blogSet)) {
@@ -120,7 +120,7 @@ public class BlogController {
 
     // 查找微博周榜
     @GetMapping("/getWeek")
-    public Result getWeek(@RequestParam Integer currentPage) {
+    public Result getWeek(@RequestParam(defaultValue = "1") Integer currentPage) {
         List<Blog> blogList = new ArrayList<>();
         Set blogSet = this.redisTemplate.opsForZSet().reverseRange(CacheConstant.WEEK_KEY,10*(currentPage-1), 10*currentPage-1);
         if (!CollectionUtils.isEmpty(blogSet)) {
@@ -138,7 +138,7 @@ public class BlogController {
 
     // 查找微博月榜
     @GetMapping("/getMonth")
-    public Result getMonth(@RequestParam Integer currentPage) {
+    public Result getMonth(@RequestParam(defaultValue = "1") Integer currentPage) {
         List<Blog> blogList = new ArrayList<>();
         Set blogSet = this.redisTemplate.opsForZSet().reverseRange(CacheConstant.MONTH_KEY,10*(currentPage-1), 10*currentPage-1);
         if (!CollectionUtils.isEmpty(blogSet)) {
