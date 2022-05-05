@@ -6,6 +6,7 @@
         <result property="userId" column="user_id"></result>
         <result property="blogId" column="blog_id"></result>
         <result property="commentContent" column="comment_content"></result>
+        <result property="status" column="status"></result>
         <result property="createDate" column="create_date"></result>
         <association property="user" column="user_id" select="findUserByUserId"></association>
     </resultMap>
@@ -13,4 +14,19 @@
     <select id="findUserByUserId" parameterType="int" resultMap="com.example.mapper.UserMapper.UserMapper">
         select * from user where user_id = #{user_id}
     </select>
+
+    <select id="getUnreadCommentCount" parameterType="java.lang.Long" resultType="java.lang.Integer">
+        select count(*) from comment inner JOIN blog on comment.blog_id = blog.blog_id
+        where comment.status = 1 and comment.user_id = #{userId}
+    </select>
+    <select id="getCommentList" resultType="java.util.Map">
+        select * from comment inner join blog on comment.blog_id = blog.blog_id where blog.user_id = #{userId}
+    </select>
+
+
+    <update id="getReadCommentCount" parameterType="java.lang.Long">
+        update comment inner JOIN blog on comment.blog_id = blog.blog_id set comment.status = 0 where comment.status = 1 and comment.user_id = #{userId}
+    </update>
+
+
 </mapper>

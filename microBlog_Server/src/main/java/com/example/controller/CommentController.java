@@ -3,8 +3,11 @@ package com.example.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.common.Result;
+import com.example.entity.Blog;
 import com.example.entity.CacheConstant;
 import com.example.entity.Comment;
+import com.example.entity.User;
+import com.example.service.BlogService;
 import com.example.service.CommentService;
 import com.example.util.ShiroUtil;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
@@ -13,6 +16,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -29,6 +34,9 @@ public class CommentController {
 
     @Autowired
     CommentService commentService;
+
+    @Autowired
+    BlogService blogService;
 
     @Autowired
     RedisTemplate redisTemplate;
@@ -52,10 +60,26 @@ public class CommentController {
         return Result.success(set);
     }
 
-    @GetMapping("getComment")
+    @GetMapping("/getComment")
     public Result getComment(@RequestParam Integer blogId) {
         Set set = this.redisTemplate.opsForSet().members(CacheConstant.COMMENT_KEY + blogId);
         return Result.success(set);
+    }
+
+    @GetMapping("/getCommentList")
+    public Result getCommentList(@RequestParam Long userId) {
+        List<Map<String, Object>> commentList = commentService.getCommentList(userId);
+        for (Map<String, Object> comment: commentList) {
+            Blog blog = blogService.getBlogFromCache(comment.get("blog_id"));
+            if (blog.getStatus() == 2) {
+                Blog fromBlog = (Blog) this.redisTemplate.opsForValue().get(CacheConstant.BLOG_KEY + blog.getContent());
+                blog.setFromBlog(fromBlog);
+            }
+            comment.put("blog", blog);
+            User user = (User) this.redisTemplate.opsForValue().get(CacheConstant.USER_KEY + comment.get("user_id"));
+            comment.put("user", user);
+        }
+        return Result.success(commentList);
     }
 
 }

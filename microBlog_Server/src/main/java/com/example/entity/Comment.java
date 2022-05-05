@@ -25,6 +25,8 @@ public class Comment extends BaseEntity  {
 
     private String commentContent;
 
+    private Integer status;
+
     @TableField(exist = false)
     private User user;
 
@@ -66,5 +68,13 @@ public class Comment extends BaseEntity  {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

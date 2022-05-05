@@ -1,7 +1,10 @@
 package com.example.service;
 
-import com.example.entity.Comment;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.entity.Comment;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -13,4 +16,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface CommentService extends IService<Comment> {
 
+    int getUnreadCommentCount(Long userId);
+
+    int getReadCommentCount(Long userId);
+
+    List<Map<String, Object>> getCommentList(Long userId);
 }

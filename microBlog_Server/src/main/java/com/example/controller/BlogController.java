@@ -330,5 +330,31 @@ public class BlogController {
         return Result.success(blogList);
     }
 
+    // 查看未读消息数量
+//    @RequiresAuthentication
+    @PostMapping("/getCount")
+    public Result getCount(@RequestParam Long userId){
+        Map resultMap = new HashMap<String, Integer>();
+        int unreadCommentCount = commentService.getUnreadCommentCount(userId);
+        int unreadLikeCount = loveService.getUnreadLikeCount(userId);
+        resultMap.put("commentCount", unreadCommentCount);
+        resultMap.put("likeCount", unreadLikeCount);
+        return Result.success(resultMap);
+    }
+
+    // 清除消息红点
+    @PostMapping("/readMess")
+    public Result readMess(@RequestParam Long userId, @RequestParam int typeId){
+        Map resultMap = new HashMap<String, Integer>();
+        if (typeId == 0){
+            int readCommentCount = commentService.getReadCommentCount(userId);
+            resultMap.put("commentCount", readCommentCount);
+        }else if (typeId == 1) {
+            int readLikeCount = loveService.getReadLikeCount(userId);
+            resultMap.put("likeCount", readLikeCount);
+        }
+        return Result.success(resultMap);
+    }
+
 }
 

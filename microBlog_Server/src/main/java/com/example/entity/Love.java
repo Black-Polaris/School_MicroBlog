@@ -20,6 +20,8 @@ public class Love extends BaseEntity  {
 
     private Integer blogId;
 
+    private Integer status;
+
     public Integer getLoveId() {
         return loveId;
     }
@@ -44,4 +46,11 @@ public class Love extends BaseEntity  {
         this.blogId = blogId;
     }
 
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 }

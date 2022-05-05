@@ -6,6 +6,7 @@ import com.example.common.Result;
 import com.example.entity.Blog;
 import com.example.entity.CacheConstant;
 import com.example.entity.Love;
+import com.example.entity.User;
 import com.example.service.BlogService;
 import com.example.service.LoveService;
 import com.example.util.ShiroUtil;
@@ -13,13 +14,12 @@ import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -76,5 +76,23 @@ public class LoveController {
         }
         return Result.fail("取消点赞失败");
     }
+
+    @GetMapping("/getLoveList")
+    public Result getLoveList(@RequestParam Long userId) {
+        List<Map<String, Object>> likeList = loveService.getLikeList(userId);
+        for (Map<String, Object> like: likeList) {
+            Blog blog = blogService.getBlogFromCache(like.get("blog_id"));
+            if (blog.getStatus() == 2) {
+                Blog fromBlog = (Blog) this.redisTemplate.opsForValue().get(CacheConstant.BLOG_KEY + blog.getContent());
+                blog.setFromBlog(fromBlog);
+            }
+            like.put("blog", blog);
+            User user = (User) this.redisTemplate.opsForValue().get(CacheConstant.USER_KEY + like.get("user_id"));
+            like.put("user", user);
+        }
+        return Result.success(likeList);
+    }
+
+
 
 }
