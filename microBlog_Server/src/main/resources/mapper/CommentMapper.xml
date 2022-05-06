@@ -20,7 +20,7 @@
         where comment.status = 1 and comment.user_id = #{userId}
     </select>
     <select id="getCommentList" resultType="java.util.Map">
-        select * from comment inner join blog on comment.blog_id = blog.blog_id where blog.user_id = #{userId}
+        select * from comment inner join blog on comment.blog_id = blog.blog_id where blog.user_id = #{userId} ORDER BY comment.create_date desc
     </select>
 
 

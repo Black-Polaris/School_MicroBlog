@@ -8,7 +8,7 @@
     </select>
 
     <select id="getLikeList" resultType="java.util.Map">
-        select * from love inner join blog on love.blog_id = blog.blog_id where blog.user_id = #{userId}
+        select * from love inner join blog on love.blog_id = blog.blog_id where blog.user_id = #{userId} ORDER BY love.create_date desc
     </select>
 
     <update id="getReadLikeCount" parameterType="java.lang.Long">
