@@ -4,7 +4,7 @@
 
     <select id="getUnreadLikeCount" parameterType="java.lang.Long" resultType="java.lang.Integer">
         select count(*) from love inner JOIN blog on love.blog_id = blog.blog_id
-        where love.status = 1 and love.user_id = #{userId}
+        where love.status = 1 and blog.user_id = #{userId}
     </select>
 
     <select id="getLikeList" resultType="java.util.Map">
@@ -12,6 +12,6 @@
     </select>
 
     <update id="getReadLikeCount" parameterType="java.lang.Long">
-        update love inner JOIN blog on love.blog_id = blog.blog_id set love.status = 0 where love.status = 1 and love.user_id = #{userId}
+        update love inner JOIN blog on love.blog_id = blog.blog_id set love.status = 0 where love.status = 1 and blog.user_id = #{userId}
     </update>
 </mapper>

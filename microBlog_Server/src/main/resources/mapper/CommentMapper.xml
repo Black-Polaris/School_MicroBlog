@@ -17,7 +17,7 @@
 
     <select id="getUnreadCommentCount" parameterType="java.lang.Long" resultType="java.lang.Integer">
         select count(*) from comment inner JOIN blog on comment.blog_id = blog.blog_id
-        where comment.status = 1 and comment.user_id = #{userId}
+        where comment.status = 1 and blog.user_id = #{userId}
     </select>
     <select id="getCommentList" resultType="java.util.Map">
         select * from comment inner join blog on comment.blog_id = blog.blog_id where blog.user_id = #{userId} ORDER BY comment.create_date desc
@@ -25,7 +25,7 @@
 
 
     <update id="getReadCommentCount" parameterType="java.lang.Long">
-        update comment inner JOIN blog on comment.blog_id = blog.blog_id set comment.status = 0 where comment.status = 1 and comment.user_id = #{userId}
+        update comment inner JOIN blog on comment.blog_id = blog.blog_id set comment.status = 0 where comment.status = 1 and blog.user_id = #{userId}
     </update>
 
 
